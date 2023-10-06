@@ -10,10 +10,13 @@ public class QuizQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String quizTitle;
+
     @Column
     private String image;
+
     @Column(nullable = false)
     private String quizContent;
 
