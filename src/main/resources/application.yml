@@ -1,0 +1,34 @@
+#cloud:
+#  aws:
+#    credentials:
+#      accessKey: ${S3_AccessKey}
+#      secretKey: ${S3_SecretKey}
+#    s3:
+#      bucket:
+#    region:
+#      static:
+#    stack:
+#      auto: false
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: root
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  cache:
+    redis:
+      port: '6379'
+      host: localhost
+    type: redis
+
+jwt:
+  secret:
+    key: ${JWT_SecretKey}
