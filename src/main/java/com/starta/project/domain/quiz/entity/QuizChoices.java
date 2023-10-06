@@ -15,10 +15,10 @@ public class QuizChoices {
     private String answer;
 
     @Column(nullable = false)
-    private boolean check;
+    private boolean checks;
 
     @ManyToOne
-    @JoinColumn(name = "quizQuestion_id",nullable = false)
+    @JoinColumn(name = "quiz_question_id",nullable = false)
     private QuizQuestion quizQuestion;
     // getters, setters, etc.
 }

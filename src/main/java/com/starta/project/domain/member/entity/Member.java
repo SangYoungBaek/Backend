@@ -20,7 +20,7 @@ public class Member {
     @Column(nullable = false)
     private UserRoleEnum role;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "memberDetail")
+    @OneToOne(mappedBy = "member")
     private MemberDetail memberDetail;
     // getters, setters, etc.
 }
