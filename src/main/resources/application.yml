@@ -1,3 +1,16 @@
+cloud:
+  aws:
+    s3:
+      bucket: quizpop
+    credentials:
+      access-key: ${S3_AccessKey}
+      secret-key: ${S3_SecretKey}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
