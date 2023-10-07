@@ -1,6 +1,7 @@
 package com.starta.project.domain.quiz.entity;
 
 import com.starta.project.domain.member.entity.Member;
+import com.starta.project.domain.quiz.dto.CreateQuizRequestDto;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -17,7 +18,10 @@ public class Quiz {
     private String title;
 
     @Column(nullable = false)
-    private Integer viewCount;
+    private String content;
+
+    @Column(nullable = false)
+    private Integer viewCount = 0;
 
     @Column(nullable = false)
     private LocalDateTime created_at;
@@ -31,6 +35,15 @@ public class Quiz {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
-    // getters, setters, etc.
+
+    public void set(CreateQuizRequestDto quizRequestDto, LocalDateTime now, Member member) {
+        this.title = quizRequestDto.getTitle();
+        this.category = quizRequestDto.getCategory();
+        this.image = quizRequestDto.getImage();
+        this.member = member;
+        this.created_at = now;
+        this.content = quizRequestDto.getContent();
+    }
+
 }
 
