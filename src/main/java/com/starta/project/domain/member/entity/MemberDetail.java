@@ -22,14 +22,13 @@ public class MemberDetail {
     private Integer complaint;
 
     @Column
-    private String image;   // 마이페이지에서 바꾸기로
+    private String image;   // 회원가입때는 받지않고 마이페이지에서 설정하는것으로 생각중
 
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    // 회원가입 최초생성
-    public MemberDetail(String nickname) {
+       public MemberDetail(String nickname) {
         this.nickname = nickname;
         this.mileagePoint = 0;
         this.complaint = 0;

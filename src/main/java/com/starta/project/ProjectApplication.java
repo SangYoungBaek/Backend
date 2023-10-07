@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class) // 시큐리티 임시차단
 @EnableJpaAuditing
 public class ProjectApplication {
