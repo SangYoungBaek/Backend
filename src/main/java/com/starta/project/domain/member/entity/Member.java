@@ -1,27 +1,35 @@
 package com.starta.project.domain.member.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Entity 
 @Getter
+@NoArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
     @OneToOne(mappedBy = "member")
     private MemberDetail memberDetail;
-    // getters, setters, etc.
+
+    public Member(String username, String password, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 }
 
