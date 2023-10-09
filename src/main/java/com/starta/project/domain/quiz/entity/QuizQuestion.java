@@ -11,6 +11,9 @@ public class QuizQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Integer questionNum = 0;
+
     @Column(nullable = false)
     private String quizTitle;
 
@@ -24,10 +27,11 @@ public class QuizQuestion {
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 
-    public void set(Quiz quiz, String title, String content, String dtoImage) {
+    public void set(Quiz quiz, Integer questionNum, String title, String content, String dtoImage) {
         this.quiz = quiz;
         this.quizTitle = title;
         this.quizContent = content;
         this.image = dtoImage;
+        this.questionNum = questionNum;
     }
 }

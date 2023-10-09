@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @AllArgsConstructor
-public class QuziQuestionController {
+public class QuizQuestionController {
 
     private final QuizQuestionService quizQuestionService;
 
     @PostMapping("/quiz/{id}/quizQuestion")
-    public ResponseEntity<MsgResponse> craeteQuizQuestion (@PathVariable Long id,
+    public ResponseEntity<MsgResponse> createQuizQuestion (@PathVariable Long id,
                                                            @RequestBody CreateQuestiontRequestDto createQuestiontRequestDto) {
        return quizQuestionService.createQuizQuestion(id, createQuestiontRequestDto) ;
     }

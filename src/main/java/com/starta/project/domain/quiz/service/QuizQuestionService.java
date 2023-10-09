@@ -6,7 +6,7 @@ import com.starta.project.domain.quiz.entity.Quiz;
 import com.starta.project.domain.quiz.entity.QuizChoices;
 import com.starta.project.domain.quiz.entity.QuizQuestion;
 import com.starta.project.domain.quiz.repository.QuizChoicesRepository;
-import com.starta.project.domain.quiz.repository.QuizQuestionRepositoty;
+import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
 import com.starta.project.domain.quiz.repository.QuizRepository;
 import com.starta.project.global.messageDto.MsgResponse;
 import lombok.AllArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,17 +23,25 @@ public class QuizQuestionService {
 
     private final QuizRepository quizRepository;
     private final QuizChoicesRepository quizChoicesRepository;
-    private final QuizQuestionRepositoty quizQuestionRepositoty;
+    private final QuizQuestionRepository quizQuestionRepository;
 
     public ResponseEntity<MsgResponse> createQuizQuestion(Long id, CreateQuestiontRequestDto createQuestiontRequestDto) {
-
+        //문제 찾기
         Quiz quiz = quizRepository.findById(id).orElseThrow( ()
                 -> new NullPointerException("해당 퀴즈가 없습니다. "));
+        //문제 번호
+        Integer questionNum = 0;
+        //findTop == 가장 먼저 찾을 수 있는 항목
+        Optional<QuizQuestion> question =  quizQuestionRepository.findTopByQuizOrderByQuestionNumDesc(quiz);
+        if (question.isPresent()){
+            questionNum = question.get().getQuestionNum();
+        }
 
         QuizQuestion quizQuestion = new QuizQuestion();
-        quizQuestion.set(quiz, createQuestiontRequestDto.getTitle(), createQuestiontRequestDto.getContent(),
+        questionNum++;
+        quizQuestion.set(quiz,questionNum ,createQuestiontRequestDto.getTitle(), createQuestiontRequestDto.getContent(),
                 createQuestiontRequestDto.getImage());
-        quizQuestionRepositoty.save(quizQuestion);
+        quizQuestionRepository.save(quizQuestion);
 
         List<CreateQuizChoicesDto> quizChoicesList = createQuestiontRequestDto.getQuizChoices();
         List<QuizChoices> quizChoices = new ArrayList<>();
