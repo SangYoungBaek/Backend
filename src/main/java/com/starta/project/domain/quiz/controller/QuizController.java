@@ -25,9 +25,17 @@ public class QuizController {
         return quizService.showQuiz(id);
     }
 
-    @PutMapping("/quiz/{id}")
-    public ResponseEntity<MsgResponse> updateQuiz (@PathVariable Long id,
-                                                   @RequestBody CreateQuizRequestDto quizRequestDto) {
-        return ResponseEntity.ok(quizService.update(id,quizRequestDto));
+    @DeleteMapping("/quiz/{id}")
+    public ResponseEntity<MsgResponse> deleteQuiz(@PathVariable Long id ) {
+        return ResponseEntity.ok(quizService.deleteQuiz(id));
     }
+
+
+
+    // 수정이라 주석처리
+//    @PutMapping("/quiz/{id}")
+//    public ResponseEntity<MsgResponse> updateQuiz (@PathVariable Long id,
+//                                                   @RequestBody CreateQuizRequestDto quizRequestDto) {
+//        return ResponseEntity.ok(quizService.update(id,quizRequestDto));
+//    }
 }

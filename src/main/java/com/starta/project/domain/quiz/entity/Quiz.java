@@ -1,5 +1,8 @@
 package com.starta.project.domain.quiz.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.starta.project.domain.member.entity.Member;
 import com.starta.project.domain.quiz.dto.CreateQuizRequestDto;
 import lombok.Getter;
@@ -48,8 +51,8 @@ public class Quiz {
         this.content = quizRequestDto.getContent();
     }
 
-    public void view(Integer viewcount) {
-        this.viewCount = viewcount;
+    public void view(Integer viewCount) {
+        this.viewCount = viewCount;
     }
 
     public void update(CreateQuizRequestDto quizRequestDto) {

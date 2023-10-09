@@ -1,5 +1,6 @@
 package com.starta.project.domain.quiz.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starta.project.domain.quiz.dto.CreateQuizChoicesDto;
 import lombok.Getter;
 
@@ -19,6 +20,7 @@ public class QuizChoices {
     private boolean checks;
 
     @ManyToOne
+    @JsonIgnore // 조회를 하려는 중에 무한 재귀 현상 발생 -> 그로 인하여 Ignore을 활용하여 조회를 방지하는 해결
     @JoinColumn(name = "quiz_question_id",nullable = false)
     private QuizQuestion quizQuestion;
 

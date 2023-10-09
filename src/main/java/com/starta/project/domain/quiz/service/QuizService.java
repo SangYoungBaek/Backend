@@ -7,7 +7,11 @@ import com.starta.project.domain.quiz.dto.CreateQuizResponseDto;
 import com.starta.project.domain.quiz.dto.ShowQuizResponseDto;
 import com.starta.project.domain.quiz.entity.Comment;
 import com.starta.project.domain.quiz.entity.Quiz;
+import com.starta.project.domain.quiz.entity.QuizChoices;
+import com.starta.project.domain.quiz.entity.QuizQuestion;
 import com.starta.project.domain.quiz.repository.CommentRepository;
+import com.starta.project.domain.quiz.repository.QuizChoicesRepository;
+import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
 import com.starta.project.domain.quiz.repository.QuizRepository;
 import com.starta.project.global.messageDto.MsgDataResponse;
 import com.starta.project.global.messageDto.MsgResponse;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +32,9 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final CommentRepository commentRepository;
-
     private final MemberRepository memberRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizChoicesRepository quizChoicesRepository;
 
     //퀴즈 만들기
     public ResponseEntity<MsgDataResponse> createQuiz(CreateQuizRequestDto quizRequestDto) {
@@ -54,24 +60,35 @@ public class QuizService {
         //댓글 가져오기
         List<Comment> comments = getComment(quiz.getId());
         //조회수 => api 검색 = 조회하는 횟수
-        Integer viewcount = quiz.getViewCount();
-        viewcount++;
-        quiz.view(viewcount);
+        Integer viewCount = quiz.getViewCount();
+        viewCount++;
+        quiz.view(viewCount);
         quizRepository.save(quiz);
         //반환하는 데이터
-        showQuizResponseDto.set(quiz,viewcount,comments);
+        showQuizResponseDto.set(quiz,viewCount,comments);
 
         return ResponseEntity.status(200).body(showQuizResponseDto);
     }
-    //수정
-    public MsgResponse update(Long id, CreateQuizRequestDto quizRequestDto) {
-        Quiz quiz = findQuiz(id);
-        quiz.update(quizRequestDto);
-        quizRepository.save(quiz);
-        MsgResponse msgResponse = new MsgResponse("문제를 수정하셨습니다.");
-        return msgResponse;
-    }
 
+    // 댓글이라 잠시 주석 처리함
+    public MsgResponse deleteQuiz(Long id) {
+        //이전의 것과 마찬가지 입니다.
+        Quiz quiz = findQuiz(id);
+//        List<Comment> comments = getComment(id);
+        List<QuizQuestion> quizQuestionList = quizQuestionRepository.findAllByQuiz(quiz);
+        List<QuizChoices> quizChoicesList = new ArrayList<>();
+        for (QuizQuestion quizQuestion : quizQuestionList) {
+            List<QuizChoices> quizChoices = quizChoicesRepository.findAllByQuizQuestion(quizQuestion);
+            quizChoicesList.addAll(quizChoices);
+        }
+
+//        commentRepository.deleteAll(comments);
+        quizChoicesRepository.deleteAll(quizChoicesList);
+        quizQuestionRepository.deleteAll(quizQuestionList);
+        quizRepository.delete(quiz);
+
+        return new MsgResponse("퀴즈 삭제 성공! ");
+    }
 
     private Quiz findQuiz (Long id) {
        return quizRepository.findById(id).orElseThrow(() ->
@@ -84,5 +101,14 @@ public class QuizService {
     }
 
 
+
+    //수정이기 때문에 주석 처리
+//    public MsgResponse update(Long id, CreateQuizRequestDto quizRequestDto) {
+//        Quiz quiz = findQuiz(id);
+//        quiz.update(quizRequestDto);
+//        quizRepository.save(quiz);
+//        MsgResponse msgResponse = new MsgResponse("문제를 수정하셨습니다.");
+//        return msgResponse;
+//    }
 
 }

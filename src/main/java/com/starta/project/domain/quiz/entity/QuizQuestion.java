@@ -1,5 +1,8 @@
 package com.starta.project.domain.quiz.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.starta.project.domain.quiz.dto.UpdateQuizQuestionDto;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -33,5 +36,11 @@ public class QuizQuestion {
         this.quizContent = content;
         this.image = dtoImage;
         this.questionNum = questionNum;
+    }
+
+    public void update(UpdateQuizQuestionDto updateQuizQuestionDto) {
+        this.quizTitle = updateQuizQuestionDto.getTitle();
+        this.image = updateQuizQuestionDto.getImage();
+        this.quizContent = updateQuizQuestionDto.getContent();
     }
 }
