@@ -17,6 +17,7 @@ import com.starta.project.global.messageDto.MsgDataResponse;
 import com.starta.project.global.messageDto.MsgResponse;
 import lombok.AllArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class QuizService {
 
     private final QuizRepository quizRepository;
@@ -59,7 +60,8 @@ public class QuizService {
         Quiz quiz = findQuiz(id);
         //댓글 가져오기
         List<Comment> comments = getComment(quiz.getId());
-        //조회수 => api 검색 = 조회하는 횟수
+        //조회수 => api 검색 = 조회하는 횟수 -> 이거 조회 api 안해도 될꺼 같은데..?
+        // 만약 할꺼면 여기다 동시성 제어를 걸어야 할거 같습니다!
         Integer viewCount = quiz.getViewCount();
         viewCount++;
         quiz.view(viewCount);
@@ -70,21 +72,20 @@ public class QuizService {
         return ResponseEntity.status(200).body(showQuizResponseDto);
     }
 
-    // 댓글이라 잠시 주석 처리함
     public MsgResponse deleteQuiz(Long id) {
         //이전의 것과 마찬가지 입니다.
         Quiz quiz = findQuiz(id);
-//        List<Comment> comments = getComment(id);
+        List<Comment> comments = getComment(id);
         List<QuizQuestion> quizQuestionList = quizQuestionRepository.findAllByQuiz(quiz);
         List<QuizChoices> quizChoicesList = new ArrayList<>();
         for (QuizQuestion quizQuestion : quizQuestionList) {
             List<QuizChoices> quizChoices = quizChoicesRepository.findAllByQuizQuestion(quizQuestion);
             quizChoicesList.addAll(quizChoices);
         }
-
-//        commentRepository.deleteAll(comments);
-        quizChoicesRepository.deleteAll(quizChoicesList);
-        quizQuestionRepository.deleteAll(quizQuestionList);
+        // 여기도 마찬가지로 효율이 좋다고하네요? (테스트 결과 문제수 22개, 문항 수 44개 before 1199ms | after 139 ms)
+        commentRepository.deleteAllInBatch(comments);
+        quizChoicesRepository.deleteAllInBatch(quizChoicesList);
+        quizQuestionRepository.deleteAllInBatch(quizQuestionList);
         quizRepository.delete(quiz);
 
         return new MsgResponse("퀴즈 삭제 성공! ");

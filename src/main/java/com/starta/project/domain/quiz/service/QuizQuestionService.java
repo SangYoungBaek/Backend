@@ -11,6 +11,7 @@ import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
 import com.starta.project.domain.quiz.repository.QuizRepository;
 import com.starta.project.global.messageDto.MsgResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class QuizQuestionService {
 
     private final QuizRepository quizRepository;
@@ -77,8 +78,8 @@ public class QuizQuestionService {
         QuizQuestion quizQuestion = quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
         // 선택지 찾아오기
         List<QuizChoices> list = quizChoicesRepository.findAllByQuizQuestion(quizQuestion);
-        // 삭제
-        quizChoicesRepository.deleteAll(list);
+        // 삭제 InBatch가 기본 값으로 100개씩 삭제라고 효율이 좋다고 하네요?
+        quizChoicesRepository.deleteAllInBatch(list);
         quizQuestionRepository.delete(quizQuestion);
 
         return new MsgResponse("삭제 성공");
@@ -86,14 +87,14 @@ public class QuizQuestionService {
 
     public MsgResponse deleteChoices(Long id) {
         QuizChoices quizChoices = quizChoicesRepository.findById(id).orElseThrow( ()
-         -> new NullPointerException("해당 선택지는 없는 선택지 입니다. "));
+         -> new NullPointerException("해당 선택지는 없는 선택지입니다. "));
         quizChoicesRepository.delete(quizChoices);
         return new MsgResponse("선택지 삭제 성공! ");
     }
 
     private Quiz findQuiz(Long id) {
         return quizRepository.findById(id).orElseThrow( ()
-        -> new NullPointerException("해당 퀴즈는 없는 선택지 입니다. "));
+        -> new NullPointerException("해당 퀴즈는 없는 퀴즈입니다. "));
     }
 
 

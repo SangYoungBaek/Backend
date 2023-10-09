@@ -6,12 +6,13 @@ import com.starta.project.domain.quiz.entity.QuizQuestion;
 import com.starta.project.domain.quiz.service.QuizQuestionService;
 import com.starta.project.global.messageDto.MsgResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class QuizQuestionController {
 
     private final QuizQuestionService quizQuestionService;
