@@ -20,15 +20,19 @@ public class Member {
     private String password;
 
     @Column(nullable = false)
+    private boolean block;
+
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MemberDetail memberDetail;
 
     public Member(String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
+        this.block = false;
         this.role = role;
     }
 }
