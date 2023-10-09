@@ -23,6 +23,5 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-    // getters, setters, etc.
 }
 

@@ -23,5 +23,11 @@ public class QuizQuestion {
     @ManyToOne
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
-    // getters, setters, etc.
+
+    public void set(Quiz quiz, String title, String content, String dtoImage) {
+        this.quiz = quiz;
+        this.quizTitle = title;
+        this.quizContent = content;
+        this.image = dtoImage;
+    }
 }

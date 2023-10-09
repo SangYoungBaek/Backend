@@ -45,5 +45,15 @@ public class Quiz {
         this.content = quizRequestDto.getContent();
     }
 
+    public void view(Integer viewcount) {
+        this.viewCount = viewcount;
+    }
+
+    public void update(CreateQuizRequestDto quizRequestDto) {
+        this.title = quizRequestDto.getTitle();
+        this.content = quizRequestDto.getContent();
+        this.category = quizRequestDto.getCategory();
+        this.image = quizRequestDto.getImage();
+    }
 }
 
