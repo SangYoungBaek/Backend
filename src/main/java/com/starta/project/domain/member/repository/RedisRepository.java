@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Redis 데이터베이스와 직접 통신하기 위한 Repository입니다
+ * Redis 데이터베이스와 직접 통신하기 위한 Repository
  */
 @Repository
 @RequiredArgsConstructor
