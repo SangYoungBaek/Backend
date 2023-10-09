@@ -30,13 +30,18 @@ public class QuizService {
 
     private final MemberRepository memberRepository;
 
+    //퀴즈 만들기
     public ResponseEntity<MsgDataResponse> createQuiz(CreateQuizRequestDto quizRequestDto) {
         Quiz quiz = new Quiz();
+        //맴버 임시 지정
         Member member = memberRepository.findById(1L).orElseThrow(() ->
                 new NullPointerException("없는 유저입니다."));
+        //생성시간
         LocalDateTime now = LocalDateTime.now();
+        //퀴즈 생성
         quiz.set(quizRequestDto, now, member);
         quizRepository.save(quiz);
+        //퀴즈 반환
         CreateQuizResponseDto quizResponseDto = new CreateQuizResponseDto();
         quizResponseDto.set(quiz.getId());
         MsgDataResponse msgDataResponse = new MsgDataResponse("퀴즈 생성 성공!" , quizRequestDto);
@@ -46,16 +51,19 @@ public class QuizService {
     public ResponseEntity<ShowQuizResponseDto> showQuiz(Long id) {
         ShowQuizResponseDto showQuizResponseDto = new ShowQuizResponseDto();
         Quiz quiz = findQuiz(id);
+        //댓글 가져오기
         List<Comment> comments = getComment(quiz.getId());
+        //조회수 => api 검색 = 조회하는 횟수
         Integer viewcount = quiz.getViewCount();
         viewcount++;
         quiz.view(viewcount);
         quizRepository.save(quiz);
+        //반환하는 데이터
         showQuizResponseDto.set(quiz,viewcount,comments);
 
         return ResponseEntity.status(200).body(showQuizResponseDto);
     }
-
+    //수정
     public MsgResponse update(Long id, CreateQuizRequestDto quizRequestDto) {
         Quiz quiz = findQuiz(id);
         quiz.update(quizRequestDto);
@@ -65,7 +73,7 @@ public class QuizService {
     }
 
 
-    public Quiz findQuiz (Long id) {
+    private Quiz findQuiz (Long id) {
        return quizRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 퀴즈가 없습니다."));
     }

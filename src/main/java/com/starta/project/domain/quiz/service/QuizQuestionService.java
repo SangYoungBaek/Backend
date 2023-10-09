@@ -26,23 +26,23 @@ public class QuizQuestionService {
     private final QuizQuestionRepository quizQuestionRepository;
 
     public ResponseEntity<MsgResponse> createQuizQuestion(Long id, CreateQuestiontRequestDto createQuestiontRequestDto) {
-        //문제 찾기
+        //퀴즈 찾기
         Quiz quiz = quizRepository.findById(id).orElseThrow( ()
                 -> new NullPointerException("해당 퀴즈가 없습니다. "));
-        //문제 번호
+        //문제 번호 찾기
         Integer questionNum = 0;
         //findTop == 가장 먼저 찾을 수 있는 항목
         Optional<QuizQuestion> question =  quizQuestionRepository.findTopByQuizOrderByQuestionNumDesc(quiz);
         if (question.isPresent()){
             questionNum = question.get().getQuestionNum();
         }
-
+        //문제 만들기
         QuizQuestion quizQuestion = new QuizQuestion();
         questionNum++;
         quizQuestion.set(quiz,questionNum ,createQuestiontRequestDto.getTitle(), createQuestiontRequestDto.getContent(),
                 createQuestiontRequestDto.getImage());
         quizQuestionRepository.save(quizQuestion);
-
+        //선택지 만들기 [] 형식
         List<CreateQuizChoicesDto> quizChoicesList = createQuestiontRequestDto.getQuizChoices();
         List<QuizChoices> quizChoices = new ArrayList<>();
         for (CreateQuizChoicesDto createQuizChoicesDto : quizChoicesList) {

@@ -24,6 +24,9 @@ public class Quiz {
     private Integer viewCount = 0;
 
     @Column(nullable = false)
+    private Integer complainInt= 0;
+
+    @Column(nullable = false)
     private LocalDateTime created_at;
 
     @Column
