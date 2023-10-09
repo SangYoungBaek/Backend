@@ -16,13 +16,13 @@ public class MemberDetail {
     @Column
     private Integer mileagePoint;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
     private Integer complaint;
 
     @Column
-    private String image;   // 회원가입때는 받지않고 마이페이지에서 설정하는것으로 생각중
+    private String image;
 
     @OneToOne
     @JoinColumn(name = "member_id")
