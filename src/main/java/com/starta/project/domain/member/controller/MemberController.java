@@ -47,8 +47,8 @@ public class MemberController {
     }
 
     // 회원탈퇴
-    @DeleteMapping("/deleteAccount")
-    public ResponseEntity<MsgResponse> deleteAccount(@RequestBody DeleteAccountDto deleteAccountDto) {
-
-    }
+//    @DeleteMapping("/deleteAccount")
+//    public ResponseEntity<MsgResponse> deleteAccount(@RequestBody DeleteAccountDto deleteAccountDto) {
+//
+//    }
 }
