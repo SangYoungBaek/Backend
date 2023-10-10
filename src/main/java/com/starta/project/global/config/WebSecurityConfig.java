@@ -39,10 +39,11 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
-    @Override
+
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:8080")
+//                .allowedOrigins("http://localhost:3000", "http://localhost:8080")
+                .allowedOrigins("http://localhost:3000", "http://localhost:8080", "https://www.yulmoo.world", "https://yulmoo.world")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowedHeaders("*")
                 .exposedHeaders(JwtUtil.AUTHORIZATION_HEADER) // JWT 헤더를 노출
@@ -88,6 +89,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .antMatchers("/").permitAll()
                         .antMatchers("/api/member/**").permitAll()
+                        .antMatchers("/v3/api-docs/**").permitAll()
+                        .antMatchers("/swagger-ui/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
