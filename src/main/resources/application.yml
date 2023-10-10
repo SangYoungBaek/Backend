@@ -1,7 +1,7 @@
 cloud:
   aws:
     s3:
-      bucket: quizpop
+      bucket: ${S3_Name}
     credentials:
       access-key: ${S3_AccessKey}
       secret-key: ${S3_SecretKey}

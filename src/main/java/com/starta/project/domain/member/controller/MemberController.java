@@ -3,6 +3,7 @@ package com.starta.project.domain.member.controller;
 import com.starta.project.domain.member.dto.SignupRequestDto;
 import com.starta.project.domain.member.service.MemberService;
 import com.starta.project.global.messageDto.MsgResponse;
+import com.starta.project.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
