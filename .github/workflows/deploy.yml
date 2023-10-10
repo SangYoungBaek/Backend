@@ -44,6 +44,8 @@ jobs:
                   secret: REDIS_URL
                 - name: REDIS_PASSWORD
                   secret: REDIS_PASSWORD
+                - name: S3_Name
+                  secret: S3_Name
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
