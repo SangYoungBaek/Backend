@@ -3,16 +3,15 @@ package com.starta.project.domain.member.controller;
 import com.starta.project.domain.member.dto.SignupRequestDto;
 import com.starta.project.domain.member.service.MemberService;
 import com.starta.project.global.messageDto.MsgResponse;
+import com.starta.project.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService userService;
-
 
     @GetMapping("/member/login")
     public String loginPage() {
@@ -45,11 +43,7 @@ public class MemberController {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
             return ResponseEntity.badRequest().body(new MsgResponse("회원가입 실패"));
-//            return "redirect:/api/user/signup";
         }
-
         return ResponseEntity.ok(userService.signup(requestDto));
-
-//        return "redirect:/api/user/login";
     }
 }
