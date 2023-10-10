@@ -42,7 +42,11 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods(ALLOWED_METHOD_NAMES.split(","));
+                .allowedOrigins("http://localhost:3000", "http://localhost:8080")
+                .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+                .allowedHeaders("*")
+                .exposedHeaders(JwtUtil.AUTHORIZATION_HEADER) // JWT 헤더를 노출
+                .allowCredentials(true);
     }
 
     @Bean
@@ -67,6 +71,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
@@ -84,6 +90,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .antMatchers("/api/member/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
+
+        http.cors();
 
 //        http.formLogin((formLogin) ->
 //                formLogin
