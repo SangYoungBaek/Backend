@@ -25,6 +25,11 @@ spring:
         show_sql: 'true'
     hibernate:
       ddl-auto: update
+  data:
+    redis:
+      port: ${REDIS_PORT}
+      host: ${REDIS_URL}
+
 jwt:
   secret:
     key: ${JWT_SecretKey}
