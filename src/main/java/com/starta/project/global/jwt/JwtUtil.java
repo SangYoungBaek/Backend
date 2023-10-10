@@ -40,8 +40,7 @@ public class JwtUtil {
 
     // JWT 데이터
     // accessToken 값, Header name, 권환 이름 (user or admin)
-    public static final String AUTHORIZATION_HEADER = "AccessToken";
-//    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     public static final String REFRESH_HEADER = "RefreshToken";
 
@@ -53,8 +52,8 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-//    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
-    private final long TOKEN_TIME = 3 * 60 * 1000L; // Test용 3분
+    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+//    private final long TOKEN_TIME = 3 * 60 * 1000L; // Test용 3분
 
     private final RedisRepository redisRepository;
 
