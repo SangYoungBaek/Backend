@@ -1,13 +1,12 @@
 package com.starta.project.domain.member.controller;
 
+import com.starta.project.domain.member.dto.DeleteAccountDto;
 import com.starta.project.domain.member.dto.SignupRequestDto;
 import com.starta.project.domain.member.service.MemberService;
 import com.starta.project.global.messageDto.MsgResponse;
-import com.starta.project.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -45,5 +44,11 @@ public class MemberController {
             return ResponseEntity.badRequest().body(new MsgResponse("회원가입 실패"));
         }
         return ResponseEntity.ok(userService.signup(requestDto));
+    }
+
+    // 회원탈퇴
+    @DeleteMapping("/deleteAccount")
+    public ResponseEntity<MsgResponse> deleteAccount(@RequestBody DeleteAccountDto deleteAccountDto) {
+
     }
 }
