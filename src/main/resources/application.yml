@@ -30,7 +30,6 @@ spring:
       port: ${REDIS_PORT}
       host: ${REDIS_URL}
       password: ${REIDS_PASSWORD}
-
 jwt:
   secret:
     key: ${JWT_SecretKey}
