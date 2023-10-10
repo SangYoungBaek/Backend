@@ -29,6 +29,7 @@ spring:
     redis:
       port: ${REDIS_PORT}
       host: ${REDIS_URL}
+      password: ${REIDS_PASSWORD}
 
 jwt:
   secret:
