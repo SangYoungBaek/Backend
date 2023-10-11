@@ -5,9 +5,11 @@ import com.starta.project.domain.quiz.dto.ShowQuestionResponseDto;
 import com.starta.project.domain.quiz.entity.QuizQuestion;
 import com.starta.project.domain.quiz.service.QuizQuestionService;
 import com.starta.project.global.messageDto.MsgResponse;
+import com.starta.project.global.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +21,9 @@ public class QuizQuestionController {
 
     @PostMapping("/quiz/{id}/quizQuestion")
     public ResponseEntity<MsgResponse> createQuizQuestion (@PathVariable Long id,
-                                                           @RequestBody CreateQuestionRequestDto createQuestionRequestDto) {
-       return quizQuestionService.createQuizQuestion(id, createQuestionRequestDto) ;
+                                                           @RequestBody CreateQuestionRequestDto createQuestionRequestDto,
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+       return quizQuestionService.createQuizQuestion(id, createQuestionRequestDto, userDetails.getMember()) ;
     }
 
     @GetMapping("/quiz/{id}/quizQuestion/{questionNum}")
@@ -31,12 +34,14 @@ public class QuizQuestionController {
 
     @DeleteMapping("/quiz/{id}/quizQuestion/{questionNum}")
     public ResponseEntity<MsgResponse> deleteQuizQuestion (@PathVariable Long id,
-                                                           @PathVariable Integer questionNum) {
-        return ResponseEntity.ok(quizQuestionService.deleteQuizQuestion(id,questionNum));
+                                                           @PathVariable Integer questionNum,
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return quizQuestionService.deleteQuizQuestion(id,questionNum, userDetails.getMember());
     }
     @DeleteMapping("/quiz/quizQuestion/quizChoices/{id}")
-    public ResponseEntity<MsgResponse> deleteQuizChoices (@PathVariable Long id){
-        return ResponseEntity.ok(quizQuestionService.deleteChoices(id));
+    public ResponseEntity<MsgResponse> deleteQuizChoices (@PathVariable Long id,
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return quizQuestionService.deleteChoices(id, userDetails.getMember());
     }
 
 

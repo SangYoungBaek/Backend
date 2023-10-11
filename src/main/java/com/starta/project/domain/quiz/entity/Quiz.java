@@ -30,7 +30,10 @@ public class Quiz {
     private Integer complainInt= 0;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
+
+    @Column
+    private Integer likes = 0;
 
     @Column
     private String image;
@@ -47,7 +50,7 @@ public class Quiz {
         this.category = quizRequestDto.getCategory();
         this.image = quizRequestDto.getImage();
         this.member = member;
-        this.created_at = now;
+        this.createdAt = now;
         this.content = quizRequestDto.getContent();
     }
 
@@ -55,11 +58,15 @@ public class Quiz {
         this.viewCount = viewCount;
     }
 
-    public void update(CreateQuizRequestDto quizRequestDto) {
-        this.title = quizRequestDto.getTitle();
-        this.content = quizRequestDto.getContent();
-        this.category = quizRequestDto.getCategory();
-        this.image = quizRequestDto.getImage();
+    public void pushLikes(Integer likesNum) {
+        this.likes = likesNum;
     }
+
+//    public void update(CreateQuizRequestDto quizRequestDto) {
+//        this.title = quizRequestDto.getTitle();
+//        this.content = quizRequestDto.getContent();
+//        this.category = quizRequestDto.getCategory();
+//        this.image = quizRequestDto.getImage();
+//    }
 }
 
