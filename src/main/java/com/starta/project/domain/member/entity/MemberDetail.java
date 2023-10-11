@@ -28,13 +28,17 @@ public class MemberDetail {
     @JoinColumn(name = "member_id")
     private Member member;
 
-       public MemberDetail(String nickname) {
+    public MemberDetail(String nickname) {
         this.nickname = nickname;
         this.mileagePoint = 0;
         this.complaint = 0;
     }
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public void changeMileagePoint(Integer totalPrice) {
+        this.mileagePoint -= totalPrice;
     }
 }
 
