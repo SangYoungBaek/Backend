@@ -27,7 +27,7 @@ public class ShowQuizResponseDto {
         this.category = quiz.getCategory();
         this.comments = comments;
         this.username = quiz.getMember().getUsername();
-        this.createdTime = quiz.getCreated_at();
+        this.createdTime = quiz.getCreatedAt();
         this.image = quiz.getImage();
         this.content = quiz.getContent();
         this.viewCount = viewcount;

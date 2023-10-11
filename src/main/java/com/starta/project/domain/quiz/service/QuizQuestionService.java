@@ -1,5 +1,6 @@
 package com.starta.project.domain.quiz.service;
 
+import com.starta.project.domain.member.entity.Member;
 import com.starta.project.domain.quiz.dto.CreateQuestionRequestDto;
 import com.starta.project.domain.quiz.dto.CreateQuizChoicesDto;
 import com.starta.project.domain.quiz.dto.ShowQuestionResponseDto;
@@ -10,7 +11,6 @@ import com.starta.project.domain.quiz.repository.QuizChoicesRepository;
 import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
 import com.starta.project.domain.quiz.repository.QuizRepository;
 import com.starta.project.global.messageDto.MsgResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,16 @@ public class QuizQuestionService {
     private final QuizChoicesRepository quizChoicesRepository;
     private final QuizQuestionRepository quizQuestionRepository;
 
-    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, CreateQuestionRequestDto createQuestionRequestDto) {
+    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, CreateQuestionRequestDto createQuestionRequestDto,
+                                                          Member member) {
         //퀴즈 찾기
         Quiz quiz = findQuiz(id);
+
+        //퀴즈 생성자 확인
+        if (!member.getId().equals(quiz.getMember().getId())) {
+            MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
+            return ResponseEntity.badRequest().body(msgResponse);
+        }
         //문제 번호 찾기
         Integer questionNum = 0;
         //findTop == 가장 먼저 찾을 수 있는 항목
@@ -71,9 +78,14 @@ public class QuizQuestionService {
 
     // cascade를 사용하는 방식도 있지만 이용하기 위해서는 DB에 추가적 연관관계를 설정해야함
     // cascade와 같은 경우 강력한 기능이지만 생각 못한 상황에서 삭제될 가능성이 있기 때문에 그냥 단순 조회를 통해 찾아서 지움
-    public MsgResponse deleteQuizQuestion(Long id, Integer questionNum) {
+    public ResponseEntity<MsgResponse> deleteQuizQuestion(Long id, Integer questionNum, Member member) {
         // 퀴즈 찾기
         Quiz quiz = findQuiz(id);
+
+        if (!member.getId().equals(quiz.getMember().getId())) {
+            MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
+            return ResponseEntity.badRequest().body(msgResponse);
+        }
         // 해당 퀴즈의 n번 문제 찾기
         QuizQuestion quizQuestion = quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
         // 선택지 찾아오기
@@ -82,14 +94,21 @@ public class QuizQuestionService {
         quizChoicesRepository.deleteAllInBatch(list);
         quizQuestionRepository.delete(quizQuestion);
 
-        return new MsgResponse("삭제 성공");
+        return ResponseEntity.ok(new MsgResponse("문제를 삭제하셨습니다. "));
     }
 
-    public MsgResponse deleteChoices(Long id) {
+    public ResponseEntity<MsgResponse> deleteChoices(Long id, Member member) {
+
         QuizChoices quizChoices = quizChoicesRepository.findById(id).orElseThrow( ()
          -> new NullPointerException("해당 선택지는 없는 선택지입니다. "));
+        if (!member.getId().equals(quizChoices.getQuizQuestion().getQuiz().getMember().getId())) {
+            MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
+            return ResponseEntity.badRequest().body(msgResponse);
+        }
+
         quizChoicesRepository.delete(quizChoices);
-        return new MsgResponse("선택지 삭제 성공! ");
+        MsgResponse msgResponse = new MsgResponse("삭제 성공!");
+        return ResponseEntity.ok(msgResponse);
     }
 
     private Quiz findQuiz(Long id) {

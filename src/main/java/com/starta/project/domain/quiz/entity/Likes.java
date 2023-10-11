@@ -19,6 +19,11 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "quiz_id",nullable = false)
     private Quiz quiz;
+
+    public void set(Quiz quiz, Member member) {
+        this.quiz = quiz;
+        this.member =member;
+    }
     // getters, setters, etc.
 }
 

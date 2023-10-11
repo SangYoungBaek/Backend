@@ -5,20 +5,12 @@ import com.starta.project.domain.member.repository.MemberRepository;
 import com.starta.project.domain.quiz.dto.CreateQuizRequestDto;
 import com.starta.project.domain.quiz.dto.CreateQuizResponseDto;
 import com.starta.project.domain.quiz.dto.ShowQuizResponseDto;
-import com.starta.project.domain.quiz.entity.Comment;
-import com.starta.project.domain.quiz.entity.Quiz;
-import com.starta.project.domain.quiz.entity.QuizChoices;
-import com.starta.project.domain.quiz.entity.QuizQuestion;
-import com.starta.project.domain.quiz.repository.CommentRepository;
-import com.starta.project.domain.quiz.repository.QuizChoicesRepository;
-import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
-import com.starta.project.domain.quiz.repository.QuizRepository;
+import com.starta.project.domain.quiz.entity.*;
+import com.starta.project.domain.quiz.repository.*;
 import com.starta.project.global.messageDto.MsgDataResponse;
 import com.starta.project.global.messageDto.MsgResponse;
-import lombok.AllArgsConstructor;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +28,11 @@ public class QuizService {
     private final MemberRepository memberRepository;
     private final QuizQuestionRepository quizQuestionRepository;
     private final QuizChoicesRepository quizChoicesRepository;
+    private final LikesRepository likesRepository;
 
     //퀴즈 만들기
-    public ResponseEntity<MsgDataResponse> createQuiz(CreateQuizRequestDto quizRequestDto) {
+    public ResponseEntity<MsgDataResponse> createQuiz(CreateQuizRequestDto quizRequestDto, Member member) {
         Quiz quiz = new Quiz();
-        //맴버 임시 지정
-        Member member = memberRepository.findById(1L).orElseThrow(() ->
-                new NullPointerException("없는 유저입니다."));
         //생성시간
         LocalDateTime now = LocalDateTime.now();
         //퀴즈 생성
@@ -72,7 +62,7 @@ public class QuizService {
         return ResponseEntity.status(200).body(showQuizResponseDto);
     }
 
-    public MsgResponse deleteQuiz(Long id) {
+    public MsgResponse deleteQuiz(Long id, Member member) {
         //이전의 것과 마찬가지 입니다.
         Quiz quiz = findQuiz(id);
         List<Comment> comments = getComment(id);
@@ -90,6 +80,26 @@ public class QuizService {
 
         return new MsgResponse("퀴즈 삭제 성공! ");
     }
+
+    public MsgResponse pushLikes(Long id, Member member) {
+        Quiz quiz = findQuiz(id);
+        Integer likesNum = quiz.getLikes();
+        if (likesRepository.findByMember(member).isPresent()){
+            likesNum--;
+            if(likesNum <= 0 ) likesNum = 0;
+            quiz.pushLikes(likesNum);
+            likesRepository.delete(likesRepository.findByMember(member).get());
+            return new MsgResponse("좋아요를 취소했습니다! ");
+        }
+
+        Likes likes = new Likes();
+        likes.set(quiz,member);
+        likesRepository.save(likes);
+        likesNum++;
+        quiz.pushLikes(likesNum);
+        return new MsgResponse("좋아요를 눌렀습니다. ");
+    }
+
 
     private Quiz findQuiz (Long id) {
        return quizRepository.findById(id).orElseThrow(() ->
