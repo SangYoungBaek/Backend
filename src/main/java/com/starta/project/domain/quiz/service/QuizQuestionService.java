@@ -31,10 +31,17 @@ public class QuizQuestionService {
     private final QuizQuestionRepository quizQuestionRepository;
     private final AmazonS3Service amazonS3Service;
 
-    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, MultipartFile multipartFile, CreateQuestionRequestDto createQuestionRequestDto,
+    //퀴즈 생성
+    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, MultipartFile multipartFile,
+                                                          CreateQuestionRequestDto createQuestionRequestDto,
                                                           Member member) {
         //퀴즈 찾기
         Quiz quiz = findQuiz(id);
+        //퀴즈 생성자 확인
+        if (!member.getId().equals(quiz.getMember().getId())) {
+            MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
+            return ResponseEntity.badRequest().body(msgResponse);
+        }
 
         //이미지 추가
         String image;
@@ -47,11 +54,6 @@ public class QuizQuestionService {
         }
         createQuestionRequestDto.set(image);
 
-        //퀴즈 생성자 확인
-        if (!member.getId().equals(quiz.getMember().getId())) {
-            MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
-            return ResponseEntity.badRequest().body(msgResponse);
-        }
         //문제 번호 찾기
         Integer questionNum = 0;
         //findTop == 가장 먼저 찾을 수 있는 항목
@@ -74,15 +76,14 @@ public class QuizQuestionService {
             quizChoices.add(quizChoices1);
         }
         quizChoicesRepository.saveAll(quizChoices);
-        MsgResponse msg = new MsgResponse("문제 생성을 성공 하셨습니다!");
-        return ResponseEntity.status(200).body(msg);
+        return ResponseEntity.ok(new MsgResponse("문제 생성을 성공 하셨습니다!"));
     }
 
     public ShowQuestionResponseDto showQuizQuestion(Long id, Integer questionNum) {
         // 퀴즈 찾기
         Quiz quiz = findQuiz(id);
         // 해당 퀴즈의 n번 문제 찾기
-        QuizQuestion quizQuestion = quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
+        QuizQuestion quizQuestion = findQuizQuestion(quiz, questionNum);
         // 선택지 찾아오기
         List<QuizChoices> list = quizChoicesRepository.findAllByQuizQuestion(quizQuestion);
         // 반환
@@ -102,7 +103,7 @@ public class QuizQuestionService {
             return ResponseEntity.badRequest().body(msgResponse);
         }
         // 해당 퀴즈의 n번 문제 찾기
-        QuizQuestion quizQuestion = quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
+        QuizQuestion quizQuestion = findQuizQuestion(quiz, questionNum);
         //이미지 삭제 S3
         try {
             amazonS3Service.deleteFile(quizQuestion.getImage());
@@ -119,6 +120,7 @@ public class QuizQuestionService {
         return ResponseEntity.ok(new MsgResponse("문제를 삭제하셨습니다. "));
     }
 
+    //퀴즈 선택지
     public ResponseEntity<MsgResponse> deleteChoices(Long id, Member member) {
 
         QuizChoices quizChoices = quizChoicesRepository.findById(id).orElseThrow( ()
@@ -127,15 +129,18 @@ public class QuizQuestionService {
             MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
             return ResponseEntity.badRequest().body(msgResponse);
         }
-
         quizChoicesRepository.delete(quizChoices);
-        MsgResponse msgResponse = new MsgResponse("삭제 성공!");
-        return ResponseEntity.ok(msgResponse);
+
+        return ResponseEntity.ok(new MsgResponse("삭제 성공!"));
     }
 
     private Quiz findQuiz(Long id) {
         return quizRepository.findById(id).orElseThrow( ()
         -> new NullPointerException("해당 퀴즈는 없는 퀴즈입니다. "));
+    }
+
+    private QuizQuestion findQuizQuestion (Quiz quiz,Integer questionNum) {
+        return quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
     }
 
 

@@ -83,7 +83,7 @@ public class QuizService {
             return ResponseEntity.badRequest().body(msgResponse);
         }
 
-        //하위 항목 삭제
+        //하위 항목 + 이미지 찾아서 리스트 만들기
         List<Comment> comments = getComment(id);
         List<QuizQuestion> quizQuestionList = quizQuestionRepository.findAllByQuiz(quiz);
         List<QuizChoices> quizChoicesList = new ArrayList<>();
@@ -107,7 +107,6 @@ public class QuizService {
         quizChoicesRepository.deleteAllInBatch(quizChoicesList);
         quizQuestionRepository.deleteAllInBatch(quizQuestionList);
         quizRepository.delete(quiz);
-
 
         return ResponseEntity.ok(new MsgResponse("퀴즈 삭제 성공! "));
     }
