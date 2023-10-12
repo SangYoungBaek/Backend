@@ -30,7 +30,7 @@ spring:
       port: ${REDIS_PORT}
       host: ${REDIS_URL}
       password: ${REIDS_PASSWORD}
-    servlet:
+  servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
