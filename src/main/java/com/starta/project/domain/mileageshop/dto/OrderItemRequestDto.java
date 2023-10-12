@@ -5,4 +5,5 @@ import lombok.Getter;
 @Getter
 public class OrderItemRequestDto {
     private Integer quantity;
+    private String email;
 }
