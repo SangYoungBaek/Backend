@@ -1,6 +1,5 @@
 package com.starta.project.domain.mileageshop.Controller;
 
-import com.starta.project.domain.mileageshop.dto.CategoriesRequestDto;
 import com.starta.project.domain.mileageshop.dto.CreateMileageItemRequestDto;
 import com.starta.project.domain.mileageshop.dto.OrderItemRequestDto;
 import com.starta.project.domain.mileageshop.entity.ItemCategoryEnum;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,15 +25,15 @@ public class MileageShopController {
     private final MileageShopService mileageShopService;
 
     @Operation(summary = "마일리지샵 구매")
-    @Secured("ROLE_USER")
     @PostMapping("/mileageshop/{mileageItemId}")
-    public ResponseEntity<MsgResponse> orderItem(@PathVariable Long mileageItemId, @RequestBody OrderItemRequestDto orderItemRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<MsgResponse> orderItem(@PathVariable Long mileageItemId,
+                                                 @RequestBody OrderItemRequestDto orderItemRequestDto,
+                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(mileageShopService.orderItem(userDetails.getMember(), mileageItemId, orderItemRequestDto));
     }
 
     @Operation(summary = "마일리지샵 등록")
     @PostMapping("/mileageshop")
-    @Secured("ROLE_ADMIN")
     public ResponseEntity<MsgResponse> createItem(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "image", required = false) MultipartFile image,
@@ -56,7 +54,6 @@ public class MileageShopController {
     }
 
     @Operation(summary = "마일리지샵 이미지 수정")
-    @Secured("ROLE_ADMIN")
     @PutMapping("/mileageshop/{id}/image")
     public ResponseEntity<MsgResponse> updateItemImage(@PathVariable Long id, @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(mileageShopService.updateItemImage(id, image));

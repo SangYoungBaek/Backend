@@ -3,7 +3,6 @@ package com.starta.project.domain.mileageshop.service;
 import com.starta.project.domain.member.entity.Member;
 import com.starta.project.domain.member.entity.UserRoleEnum;
 import com.starta.project.domain.member.repository.MemberRepository;
-import com.starta.project.domain.mileageshop.dto.CategoriesRequestDto;
 import com.starta.project.domain.mileageshop.dto.CreateMileageItemRequestDto;
 import com.starta.project.domain.mileageshop.dto.MileageItemResponseDto;
 import com.starta.project.domain.mileageshop.dto.OrderItemRequestDto;
@@ -52,10 +51,7 @@ public class MileageShopService {
 
         // 구매 성공 로직
         // 마일리지 차감
-        System.out.println("차감 포인트 = " + totalPrice);
-        System.out.println("차감 전 memberMileagePoint = " + findMember.getMemberDetail().getMileagePoint());
         findMember.getMemberDetail().changeMileagePoint(totalPrice);
-        System.out.println("차감 후 memberMileagePoint = " + findMember.getMemberDetail().getMileagePoint());
 
         // 구매 내역 저장
         PurchaseHistory purchaseHistory = new PurchaseHistory(findItem, findMember.getMemberDetail(), orderItemRequestDto.getQuantity());
@@ -76,8 +72,7 @@ public class MileageShopService {
         // 이미지가 없을 경우
         if (image == null) throw new IllegalArgumentException("이미지가 없습니다.");
 
-
-//         이미지 업로드
+        // 이미지 업로드
         String imageUrl = amazonS3Service.upload(image);
 
         MileageShopItem mileageShopItem = new MileageShopItem(requestDto, imageUrl, requestDto.getCategory());
@@ -114,7 +109,7 @@ public class MileageShopService {
     public MsgResponse updateItemImage(Long id, MultipartFile image) throws IOException {
         MileageShopItem findItem = findItem(id);
         String oldImageUrl = findItem.getImage();
-        if (image.isEmpty()) return new MsgResponse("이미지가 없습니다.");
+        if (image.isEmpty()) throw new IllegalArgumentException("이미지가 없습니다.");
         amazonS3Service.deleteFile(oldImageUrl.split("/")[3]);
         String imageUrl = amazonS3Service.upload(image);
         findItem.changeImage(imageUrl);

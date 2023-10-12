@@ -30,7 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
-@EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 활성화
+//@EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 활성화
 @RequiredArgsConstructor
 public class WebSecurityConfig implements WebMvcConfigurer {
     private final JwtUtil jwtUtil;
