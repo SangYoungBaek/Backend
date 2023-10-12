@@ -12,6 +12,7 @@ import com.starta.project.global.messageDto.MsgResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class CommentService {
     }
 
 
+    @Transactional
     public ResponseEntity<MsgResponse> updateComment(Long id, UpdateCommentResponseDto updateCommentResponseDto, Member member) {
         Comment comment = findComment(id);
 

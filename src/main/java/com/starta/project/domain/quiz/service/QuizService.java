@@ -14,6 +14,7 @@ import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -74,6 +75,7 @@ public class QuizService {
         return ResponseEntity.status(200).body(showQuizResponseDto);
     }
 
+    @Transactional
     public ResponseEntity<MsgResponse> deleteQuiz(Long id, Member member) {
         //이전의 것과 마찬가지 입니다.
         Quiz quiz = findQuiz(id);
@@ -111,6 +113,7 @@ public class QuizService {
         return ResponseEntity.ok(new MsgResponse("퀴즈 삭제 성공! "));
     }
 
+    @Transactional
     public MsgResponse pushLikes(Long id, Member member) {
         Quiz quiz = findQuiz(id);
         Integer likesNum = quiz.getLikes();

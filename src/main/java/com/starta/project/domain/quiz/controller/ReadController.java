@@ -5,6 +5,7 @@ import com.starta.project.domain.quiz.dto.SimpleQuizDto;
 import com.starta.project.domain.quiz.service.ReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +23,18 @@ public class ReadController {
     }
 
     @GetMapping("/quiz")
-    private ResponseEntity<List<SimpleQuizDto>> recentlyList () {
+    public ResponseEntity<List<SimpleQuizDto>> recentlyList () {
         return ResponseEntity.ok(readService.readQuiz());
     }
 
     @GetMapping("/quiz/hot")
-    private ResponseEntity<List<SimpleQuizDto>> hotQuizList () {
+    public ResponseEntity<List<SimpleQuizDto>> hotQuizList () {
         return ResponseEntity.ok(readService.readQuizByHot());
     }
 
+
     @GetMapping("/quiz/viewNum")
-    private ResponseEntity<List<SimpleQuizDto>> readByView () {
+    public ResponseEntity<List<SimpleQuizDto>> readByView () {
         return ResponseEntity.ok(readService.readByView());
     }
 }

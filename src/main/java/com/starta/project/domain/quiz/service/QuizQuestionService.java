@@ -16,6 +16,7 @@ import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class QuizQuestionService {
     private final AmazonS3Service amazonS3Service;
 
     //퀴즈 생성
+    @Transactional
     public ResponseEntity<MsgResponse> createQuizQuestion(Long id, MultipartFile multipartFile,
                                                           CreateQuestionRequestDto createQuestionRequestDto,
                                                           Member member) {
@@ -94,6 +96,7 @@ public class QuizQuestionService {
 
     // cascade를 사용하는 방식도 있지만 이용하기 위해서는 DB에 추가적 연관관계를 설정해야함
     // cascade와 같은 경우 강력한 기능이지만 생각 못한 상황에서 삭제될 가능성이 있기 때문에 그냥 단순 조회를 통해 찾아서 지움
+    @Transactional
     public ResponseEntity<MsgResponse> deleteQuizQuestion(Long id, Integer questionNum, Member member) {
         // 퀴즈 찾기
         Quiz quiz = findQuiz(id);
