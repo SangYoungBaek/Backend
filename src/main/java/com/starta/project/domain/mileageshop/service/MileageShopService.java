@@ -54,7 +54,7 @@ public class MileageShopService {
         findMember.getMemberDetail().changeMileagePoint(totalPrice);
 
         // 구매 내역 저장
-        PurchaseHistory purchaseHistory = new PurchaseHistory(findItem, findMember.getMemberDetail(), orderItemRequestDto.getQuantity());
+        PurchaseHistory purchaseHistory = new PurchaseHistory(findItem, findMember.getMemberDetail(), orderItemRequestDto, totalPrice);
         purchaseHistoryRepository.save(purchaseHistory);
 
         return new MsgResponse("구매에 성공 했습니다.");
