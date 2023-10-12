@@ -1,6 +1,7 @@
 package com.starta.project.domain.mypage.entity;
 
 import com.starta.project.domain.member.entity.MemberDetail;
+import com.starta.project.domain.mileageshop.dto.OrderItemRequestDto;
 import com.starta.project.domain.mileageshop.entity.MileageShopItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +31,18 @@ public class PurchaseHistory {
     @Column(nullable = false)
     private Integer quantity;
 
-    public PurchaseHistory(MileageShopItem mileageShopItem, MemberDetail memberDetail, Integer quantity) {
-        this.quantity = quantity;
+    @Column(nullable = false)
+    private Integer totalPrice;
+
+    @Column(nullable = false)
+    private String email;
+
+    public PurchaseHistory(MileageShopItem mileageShopItem, MemberDetail memberDetail, OrderItemRequestDto orderItemRequestDto, Integer totalPrice) {
+        this.quantity = orderItemRequestDto.getQuantity();
         this.mileageShopItem = mileageShopItem;
         this.memberDetail = memberDetail;
+        this.email = orderItemRequestDto.getEmail();
+        this.totalPrice = totalPrice;
     }
 }
 
