@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -21,9 +22,10 @@ public class QuizQuestionController {
 
     @PostMapping("/quiz/{id}/quizQuestion")
     public ResponseEntity<MsgResponse> createQuizQuestion (@PathVariable Long id,
-                                                           @RequestBody CreateQuestionRequestDto createQuestionRequestDto,
+                                                           @RequestPart("requestDto") CreateQuestionRequestDto createQuestionRequestDto,
+                                                           @RequestPart("image") MultipartFile multipartFile,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-       return quizQuestionService.createQuizQuestion(id, createQuestionRequestDto, userDetails.getMember()) ;
+       return quizQuestionService.createQuizQuestion(id,multipartFile ,createQuestionRequestDto, userDetails.getMember()) ;
     }
 
     @GetMapping("/quiz/{id}/quizQuestion/{questionNum}")

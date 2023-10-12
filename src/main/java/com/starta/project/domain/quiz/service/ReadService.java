@@ -7,6 +7,7 @@ import com.starta.project.domain.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,44 +21,43 @@ public class ReadService {
     private final QuizRepository quizRepository;
 
     // 카테고리 별 정렬
+    @Transactional(readOnly = true)
     public List<SimpleQuizDto> readByCategory(CategoryDto categoryDto) {
         List<SimpleQuizDto> list = new ArrayList<>();
         List<Quiz> quizList = quizRepository.findAllByCategoryOrderByCreatedAtDesc(categoryDto.getCategory());
-        for (Quiz quiz : quizList) {
-            SimpleQuizDto simpleQuizDto = new SimpleQuizDto();
-            simpleQuizDto.set(quiz);
-            list.add(simpleQuizDto);
-        }
+        list = makeList(quizList,list);
+
         return list;
     }
 
     // 최신순
+    @Transactional(readOnly = true)
     public List<SimpleQuizDto> readQuiz() {
         List<SimpleQuizDto> list = new ArrayList<>();
         List<Quiz> quizList = quizRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        for (Quiz quiz : quizList) {
-            SimpleQuizDto simpleQuizDto = new SimpleQuizDto();
-            simpleQuizDto.set(quiz);
-            list.add(simpleQuizDto);
-        }
+        list = makeList(quizList,list);
         return list;
     }
     //좋아요 순
+    @Transactional(readOnly = true)
     public List<SimpleQuizDto> readQuizByHot() {
         List<SimpleQuizDto> list = new ArrayList<>();
         List<Quiz> quizList = quizRepository.findAll(Sort.by(Sort.Direction.DESC, "likes"));
-        for (Quiz quiz : quizList) {
-            SimpleQuizDto simpleQuizDto = new SimpleQuizDto();
-            simpleQuizDto.set(quiz);
-            list.add(simpleQuizDto);
-        }
+        list = makeList(quizList,list);
         return list;
     }
 
     //조회순
+    @Transactional(readOnly = true)
     public List<SimpleQuizDto> readByView() {
         List<SimpleQuizDto> list = new ArrayList<>();
         List<Quiz> quizList = quizRepository.findAll(Sort.by(Sort.Direction.DESC, "viewCount"));
+        list = makeList(quizList,list);
+        return list;
+    }
+
+    //리스트 만들기
+    private List<SimpleQuizDto> makeList (List<Quiz> quizList , List<SimpleQuizDto> list) {
         for (Quiz quiz : quizList) {
             SimpleQuizDto simpleQuizDto = new SimpleQuizDto();
             simpleQuizDto.set(quiz);

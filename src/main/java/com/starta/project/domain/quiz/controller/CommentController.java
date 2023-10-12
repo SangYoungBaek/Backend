@@ -29,12 +29,12 @@ public class CommentController {
     public ResponseEntity<MsgResponse> updateComment (@PathVariable Long id ,
                                                       @RequestBody UpdateCommentResponseDto updateCommentResponseDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.ok(commentService.updateComment(id, updateCommentResponseDto, userDetails.getMember()));
+        return commentService.updateComment(id, updateCommentResponseDto, userDetails.getMember());
     }
 
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<MsgResponse> deleteComment (@PathVariable Long id,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(commentService.deleteComment(id, userDetails.getMember()));
+        return commentService.deleteComment(id, userDetails.getMember());
     }
 }

@@ -1,18 +1,21 @@
 package com.starta.project.domain.quiz.service;
 
 import com.starta.project.domain.member.entity.Member;
-import com.starta.project.domain.member.repository.MemberRepository;
 import com.starta.project.domain.quiz.dto.CreateQuizRequestDto;
 import com.starta.project.domain.quiz.dto.CreateQuizResponseDto;
 import com.starta.project.domain.quiz.dto.ShowQuizResponseDto;
 import com.starta.project.domain.quiz.entity.*;
 import com.starta.project.domain.quiz.repository.*;
+import com.starta.project.global.aws.AmazonS3Service;
 import com.starta.project.global.messageDto.MsgDataResponse;
 import com.starta.project.global.messageDto.MsgResponse;
 
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.time.LocalDateTime;
@@ -25,14 +28,24 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
     private final QuizQuestionRepository quizQuestionRepository;
     private final QuizChoicesRepository quizChoicesRepository;
     private final LikesRepository likesRepository;
+    private final AmazonS3Service amazonS3Service;
 
     //퀴즈 만들기
-    public ResponseEntity<MsgDataResponse> createQuiz(CreateQuizRequestDto quizRequestDto, Member member) {
+    public ResponseEntity<MsgDataResponse> createQuiz(MultipartFile multipartFile, CreateQuizRequestDto quizRequestDto,
+                                                      Member member) {
         Quiz quiz = new Quiz();
+        String image;
+        //이미지
+        try {
+            if (multipartFile.isEmpty()) image = "";
+            else image = amazonS3Service.upload(multipartFile);
+        } catch (java.io.IOException e) {
+            throw new IOException("이미지 업로드에 문제가 실패",e);
+        }
+        quizRequestDto.set(image);
         //생성시간
         LocalDateTime now = LocalDateTime.now();
         //퀴즈 생성
@@ -42,7 +55,7 @@ public class QuizService {
         CreateQuizResponseDto quizResponseDto = new CreateQuizResponseDto();
         quizResponseDto.set(quiz.getId());
         MsgDataResponse msgDataResponse = new MsgDataResponse("퀴즈 생성 성공!" , quizRequestDto);
-        return ResponseEntity.status(200).body(msgDataResponse);
+        return ResponseEntity.ok().body(msgDataResponse);
     }
 
     public ResponseEntity<ShowQuizResponseDto> showQuiz(Long id) {
@@ -62,15 +75,34 @@ public class QuizService {
         return ResponseEntity.status(200).body(showQuizResponseDto);
     }
 
-    public MsgResponse deleteQuiz(Long id, Member member) {
+    @Transactional
+    public ResponseEntity<MsgResponse> deleteQuiz(Long id, Member member) {
         //이전의 것과 마찬가지 입니다.
         Quiz quiz = findQuiz(id);
+        //유저 확인
+        if (!member.getId().equals(quiz.getMember().getId())) {
+            MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
+            return ResponseEntity.badRequest().body(msgResponse);
+        }
+
+        //하위 항목 + 이미지 찾아서 리스트 만들기
         List<Comment> comments = getComment(id);
         List<QuizQuestion> quizQuestionList = quizQuestionRepository.findAllByQuiz(quiz);
         List<QuizChoices> quizChoicesList = new ArrayList<>();
+        List<String> imageList = new ArrayList<>();
         for (QuizQuestion quizQuestion : quizQuestionList) {
+            imageList.add(quizQuestion.getImage());
             List<QuizChoices> quizChoices = quizChoicesRepository.findAllByQuizQuestion(quizQuestion);
             quizChoicesList.addAll(quizChoices);
+        }
+        //이미지 삭제
+        imageList.add(quiz.getImage());
+        for (String image : imageList) {
+            try {
+                amazonS3Service.deleteFile(image) ;
+            } catch (java.io.IOException e) {
+                throw new IOException("이미지 삭제 실패 ",e);
+            }
         }
         // 여기도 마찬가지로 효율이 좋다고하네요? (테스트 결과 문제수 22개, 문항 수 44개 before 1199ms | after 139 ms)
         commentRepository.deleteAllInBatch(comments);
@@ -78,9 +110,10 @@ public class QuizService {
         quizQuestionRepository.deleteAllInBatch(quizQuestionList);
         quizRepository.delete(quiz);
 
-        return new MsgResponse("퀴즈 삭제 성공! ");
+        return ResponseEntity.ok(new MsgResponse("퀴즈 삭제 성공! "));
     }
 
+    @Transactional
     public MsgResponse pushLikes(Long id, Member member) {
         Quiz quiz = findQuiz(id);
         Integer likesNum = quiz.getLikes();

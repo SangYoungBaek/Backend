@@ -12,6 +12,7 @@ import com.starta.project.global.messageDto.MsgResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,6 @@ public class CommentService {
 
     private final QuizRepository quizRepository;
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
 
     public MsgResponse createComment(CreateCommentRequestDto createCommentRequestDto, Member member) {
         Quiz quiz = quizRepository.findById(createCommentRequestDto.getId()).orElseThrow( ()
@@ -31,24 +31,25 @@ public class CommentService {
     }
 
 
-    public MsgResponse updateComment(Long id, UpdateCommentResponseDto updateCommentResponseDto, Member member) {
+    @Transactional
+    public ResponseEntity<MsgResponse> updateComment(Long id, UpdateCommentResponseDto updateCommentResponseDto, Member member) {
         Comment comment = findComment(id);
 
         if(!member.getId().equals(comment.getMember().getId()) ) {
-            return new MsgResponse( "댓글을 작성한 유저만 수정 가능합니다. ");
+            return ResponseEntity.badRequest().body( new MsgResponse( "댓글을 작성한 유저만 수정 가능합니다. "));
         }
         comment.update(updateCommentResponseDto.getContent());
         commentRepository.save(comment);
-        return new MsgResponse("댓글 수정을 성공했습니다. ");
+        return ResponseEntity.ok().body(new MsgResponse("댓글 수정을 성공했습니다. "));
     }
 
-    public MsgResponse deleteComment(Long id, Member member) {
+    public ResponseEntity<MsgResponse> deleteComment(Long id, Member member) {
         Comment comment = findComment(id);
         if(!member.getId().equals(comment.getMember().getId()) ) {
-            return new MsgResponse( "댓글을 작성한 유저만 삭제 가능합니다. ");
+            return ResponseEntity.badRequest().body( new MsgResponse( "댓글을 작성한 유저만 삭제 가능합니다. "));
         }
         commentRepository.delete(comment);
-        return new MsgResponse("댓글 삭제를 성공했습니다. ");
+        return ResponseEntity.ok().body(new MsgResponse("댓글 삭제를 성공했습니다. "));
     }
 
     private Comment findComment (Long id) {
