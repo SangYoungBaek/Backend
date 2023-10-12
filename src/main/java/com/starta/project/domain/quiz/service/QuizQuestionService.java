@@ -10,10 +10,13 @@ import com.starta.project.domain.quiz.entity.QuizQuestion;
 import com.starta.project.domain.quiz.repository.QuizChoicesRepository;
 import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
 import com.starta.project.domain.quiz.repository.QuizRepository;
+import com.starta.project.global.aws.AmazonS3Service;
 import com.starta.project.global.messageDto.MsgResponse;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +29,23 @@ public class QuizQuestionService {
     private final QuizRepository quizRepository;
     private final QuizChoicesRepository quizChoicesRepository;
     private final QuizQuestionRepository quizQuestionRepository;
+    private final AmazonS3Service amazonS3Service;
 
-    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, CreateQuestionRequestDto createQuestionRequestDto,
+    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, MultipartFile multipartFile, CreateQuestionRequestDto createQuestionRequestDto,
                                                           Member member) {
         //퀴즈 찾기
         Quiz quiz = findQuiz(id);
+
+        //이미지 추가
+        String image;
+        //이미지
+        try {
+            if (multipartFile.isEmpty()) image = "";
+            else image = amazonS3Service.upload(multipartFile);
+        } catch (java.io.IOException e) {
+            throw new IOException("이미지 업로드에 문제가 있습니다!  ");
+        }
+        createQuestionRequestDto.set(image);
 
         //퀴즈 생성자 확인
         if (!member.getId().equals(quiz.getMember().getId())) {
@@ -88,6 +103,13 @@ public class QuizQuestionService {
         }
         // 해당 퀴즈의 n번 문제 찾기
         QuizQuestion quizQuestion = quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
+        //이미지 삭제 S3
+        try {
+            amazonS3Service.deleteFile(quizQuestion.getImage());
+        } catch (java.io.IOException e) {
+            throw new IOException("문제 이미지 실패!", e);
+        }
+
         // 선택지 찾아오기
         List<QuizChoices> list = quizChoicesRepository.findAllByQuizQuestion(quizQuestion);
         // 삭제 InBatch가 기본 값으로 100개씩 삭제라고 효율이 좋다고 하네요?

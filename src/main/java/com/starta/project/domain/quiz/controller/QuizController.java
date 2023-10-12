@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,9 +23,10 @@ public class QuizController {
     private final QuizService quizService;
 
     @PostMapping("/quiz")
-    public ResponseEntity<MsgDataResponse> createQuiz (@RequestBody CreateQuizRequestDto quizRequestDto,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return quizService.createQuiz(quizRequestDto, userDetails.getMember() );
+    public ResponseEntity<MsgDataResponse> createQuiz (@RequestPart("requestDto") CreateQuizRequestDto quizRequestDto,
+                                                       @RequestPart("image") MultipartFile multipartFile,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails)  {
+        return quizService.createQuiz(multipartFile ,quizRequestDto, userDetails.getMember() );
     }
 
     @GetMapping("/quiz/{id}")
@@ -34,7 +37,7 @@ public class QuizController {
     @DeleteMapping("/quiz/{id}")
     public ResponseEntity<MsgResponse> deleteQuiz(@PathVariable Long id,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(quizService.deleteQuiz(id,userDetails.getMember()));
+        return quizService.deleteQuiz(id,userDetails.getMember());
     }
 
     @PostMapping("/quiz/{id}/quizLikes")
