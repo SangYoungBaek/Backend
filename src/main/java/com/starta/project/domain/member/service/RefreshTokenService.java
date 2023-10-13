@@ -41,7 +41,7 @@ public class RefreshTokenService {
         try {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
-            redisRepository.setExpire(key, 7 * 24 * 60 * 60L);   // 1주일
+            redisRepository.setExpire(key, 24 * 60 * 60L);   // 1일
 //            redisRepository.setExpire(key, 10 * 60L);   // 10분
             return key;
 
