@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 /**
  * Spring Security의 필터 중 하나로, JWT 토큰을 확인하고 인증을 처리
  */
-
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
@@ -40,7 +39,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("로그인 시도");
         try {
-            // 요청 본문이 비어 있는지 확인
+//             요청 본문이 비어 있는지 확인
             if (request.getContentLength() == 0) {
                 throw new RuntimeException("요청 본문이 비어 있습니다.");
             }
@@ -66,10 +65,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getMember().getRole();
 
-        String token = jwtUtil.createToken(username, role);
-        refreshTokenService.createRefreshToken(username, role);
 
-        jwtUtil.addJwtToHeader(token, response);
+        String token = jwtUtil.createToken(username, role);
+        refreshTokenService.createRefreshToken(token, username, role);
+
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(400);
         String msg = "회원을 찾을 수 없습니다.";
 
-        try(PrintWriter writer = response.getWriter()) {
+        try (PrintWriter writer = response.getWriter()) {
             String jsonDto = mapper.writeValueAsString(new MsgResponse(msg));
             writer.print(jsonDto);
         } catch (IOException e) {
