@@ -42,8 +42,8 @@ public class RefreshTokenService {
         try {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
-            redisRepository.setExpire(key, 7 * 24 * 60 * 60L);  // test 로 10분
-//            redisRepository.setExpire(key, 7 * 24 * 60 * 60L);
+            redisRepository.setExpire(key, 7 * 24 * 60 * 60L);  // 1주일
+//            redisRepository.setExpire(key, 3 * 60L);  // test용 3분
             return uuid.toString();
 
         } catch (JsonProcessingException e) {

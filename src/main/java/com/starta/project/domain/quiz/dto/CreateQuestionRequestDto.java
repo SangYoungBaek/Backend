@@ -14,4 +14,7 @@ public class CreateQuestionRequestDto {
     private String image;
     private List<CreateQuizChoicesDto> quizChoices;
 
+    public void set(String image) {
+        this.image = image;
+    }
 }
