@@ -2,7 +2,6 @@ package com.starta.project.domain.quiz.controller;
 
 import com.starta.project.domain.quiz.dto.CreateQuizRequestDto;
 import com.starta.project.domain.quiz.dto.ShowQuizResponseDto;
-import com.starta.project.domain.quiz.dto.SimpleQuizDto;
 import com.starta.project.domain.quiz.service.QuizService;
 import com.starta.project.global.messageDto.MsgDataResponse;
 import com.starta.project.global.messageDto.MsgResponse;
@@ -13,8 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -30,8 +28,9 @@ public class QuizController {
     }
 
     @GetMapping("/quiz/{id}")
-    public ResponseEntity<ShowQuizResponseDto> showQuiz (@PathVariable Long id) {
-        return quizService.showQuiz(id);
+    public ResponseEntity<ShowQuizResponseDto> showQuiz (@PathVariable Long id,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return quizService.showQuiz(id, userDetails.getMember());
     }
 
     @DeleteMapping("/quiz/{id}")
@@ -44,6 +43,12 @@ public class QuizController {
     public ResponseEntity<MsgResponse> pushLikes (@PathVariable Long id,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(quizService.pushLikes(id, userDetails.getMember()));
+    }
+
+    @PutMapping("/quiz/display/{id}")
+    public ResponseEntity<MsgResponse> display (@PathVariable Long id,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return quizService.display(id, userDetails.getMember().getId());
     }
 
 
