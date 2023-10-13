@@ -24,7 +24,7 @@ public class ReadService {
     @Transactional(readOnly = true)
     public List<SimpleQuizDto> readByCategory(CategoryDto categoryDto) {
         List<SimpleQuizDto> list = new ArrayList<>();
-        List<Quiz> quizList = quizRepository.findAllByCategoryOrderByCreatedAtDesc(categoryDto.getCategory());
+        List<Quiz> quizList = quizRepository.findAllByCategoryAndDisplayTrueOrderByCreatedAtDesc(categoryDto.getCategory());
         list = makeList(quizList,list);
 
         return list;
@@ -34,7 +34,7 @@ public class ReadService {
     @Transactional(readOnly = true)
     public List<SimpleQuizDto> readQuiz() {
         List<SimpleQuizDto> list = new ArrayList<>();
-        List<Quiz> quizList = quizRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        List<Quiz> quizList = quizRepository.findAllByDisplayIsTrue(Sort.by(Sort.Direction.DESC,"id"));
         list = makeList(quizList,list);
         return list;
     }
@@ -42,7 +42,7 @@ public class ReadService {
     @Transactional(readOnly = true)
     public List<SimpleQuizDto> readQuizByHot() {
         List<SimpleQuizDto> list = new ArrayList<>();
-        List<Quiz> quizList = quizRepository.findAll(Sort.by(Sort.Direction.DESC, "likes"));
+        List<Quiz> quizList = quizRepository.findAllByDisplayIsTrue(Sort.by(Sort.Direction.DESC, "likes","id"));
         list = makeList(quizList,list);
         return list;
     }
@@ -51,7 +51,15 @@ public class ReadService {
     @Transactional(readOnly = true)
     public List<SimpleQuizDto> readByView() {
         List<SimpleQuizDto> list = new ArrayList<>();
-        List<Quiz> quizList = quizRepository.findAll(Sort.by(Sort.Direction.DESC, "viewCount"));
+        List<Quiz> quizList = quizRepository.findAllByDisplayIsTrue(Sort.by(Sort.Direction.DESC, "viewCount","id"));
+        list = makeList(quizList,list);
+        return list;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleQuizDto> search(String keyword) {
+        List<SimpleQuizDto> list = new ArrayList<>();
+        List<Quiz> quizList = quizRepository.findAllByDisplayIsTrueAndTitleContaining(keyword);
         list = makeList(quizList,list);
         return list;
     }

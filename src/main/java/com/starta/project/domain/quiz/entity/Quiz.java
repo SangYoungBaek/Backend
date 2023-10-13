@@ -41,6 +41,9 @@ public class Quiz {
     @Column(nullable = false)
     private String category;
 
+    @Column
+    private Boolean display = false;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -60,6 +63,10 @@ public class Quiz {
 
     public void pushLikes(Integer likesNum) {
         this.likes = likesNum;
+    }
+
+    public void play(boolean b) {
+        this.display = b;
     }
 
 //    public void update(CreateQuizRequestDto quizRequestDto) {
