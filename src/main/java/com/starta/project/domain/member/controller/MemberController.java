@@ -46,9 +46,5 @@ public class MemberController {
         return ResponseEntity.ok(userService.signup(requestDto));
     }
 
-    // 회원탈퇴
-//    @DeleteMapping("/deleteAccount")
-//    public ResponseEntity<MsgResponse> deleteAccount(@RequestBody DeleteAccountDto deleteAccountDto) {
-//
-//    }
+
 }
