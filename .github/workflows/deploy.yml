@@ -36,6 +36,14 @@ jobs:
                   secret: S3_AccessKey
                 - name: S3_SecretKey
                   secret: S3_SecretKey
+                - name: REDIS_URL
+                  secret: REDIS_URL
+                - name: REDIS_PORT
+                  secret: REDIS_PORT
+                - name: REIDS_PASSWORD
+                  secret: REDIS_PASSWORD
+                - name: S3_Name
+                  secret: S3_Name
                 - name: SPRING_PROFILES_ACTIVE
                   value: ""
             context:
