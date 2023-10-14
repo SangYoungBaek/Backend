@@ -27,24 +27,24 @@ public class RefreshTokenService {
 
     /**
      * refresh 토큰 저장 및 ID 반환 메소드
-     *
+     * @param accessToken 발급된 엑세스토큰
      * @param userName 발급할 userName
      * @param role 발급할 userRole
      * @return refreshtoken key 값
      */
-    public String createRefreshToken(String userName, UserRoleEnum role) {
+    public String createRefreshToken(String accessToken, String userName, UserRoleEnum role) {
 
-        UUID uuid = UUID.randomUUID();
-        String key = REFRESH_PREFIX + uuid;
+        String key = REFRESH_PREFIX + accessToken.replace("Bearer ", "");
 
         RefreshToken refreshToken = new RefreshToken(userName, role);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
-            redisRepository.setExpire(key, 7 * 24 * 60 * 60L);  // 1주일
-//            redisRepository.setExpire(key, 3 * 60L);  // test용 3분
-            return uuid.toString();
+
+            redisRepository.setExpire(key, 24 * 60 * 60L);   //서버용 1일
+//            redisRepository.setExpire(key, 5 * 60L);   // Test용 5분
+            return key;
 
         } catch (JsonProcessingException e) {
             log.error("refresh 토큰 String 변환 실패");
@@ -56,10 +56,10 @@ public class RefreshTokenService {
         return redisRepository.getTimeToLive(key);
     }
 
-    public String refreshTokenRotation(String userName, UserRoleEnum role, Long time) {
+    // 만료 전 재발행
+    public String refreshTokenRotation(String accessToken, String userName, UserRoleEnum role, Long time) {
 
-        UUID uuid = UUID.randomUUID();
-        String key = REFRESH_PREFIX + uuid;
+        String key = REFRESH_PREFIX + accessToken.replace("Bearer ", "");
 
         RefreshToken refreshToken = new RefreshToken(userName, role);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -67,7 +67,7 @@ public class RefreshTokenService {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
             redisRepository.setExpire(key, time);
-            return uuid.toString();
+            return key;
 
         } catch (JsonProcessingException e) {
             log.error("refresh 토큰 String 변환 실패");

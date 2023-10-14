@@ -1,38 +1,28 @@
 package com.starta.project.domain.member.controller;
 
-import com.starta.project.domain.member.dto.DeleteAccountDto;
 import com.starta.project.domain.member.dto.SignupRequestDto;
 import com.starta.project.domain.member.service.MemberService;
 import com.starta.project.global.messageDto.MsgResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
 
     private final MemberService userService;
-
-    @GetMapping("/member/login")
-    public String loginPage() {
-        return "login";
-    }
-
-    @GetMapping("/member/signup")
-    public String signupPage() {
-        return "signup";
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<MsgResponse> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
@@ -46,9 +36,4 @@ public class MemberController {
         return ResponseEntity.ok(userService.signup(requestDto));
     }
 
-    // 회원탈퇴
-//    @DeleteMapping("/deleteAccount")
-//    public ResponseEntity<MsgResponse> deleteAccount(@RequestBody DeleteAccountDto deleteAccountDto) {
-//
-//    }
 }

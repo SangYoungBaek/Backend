@@ -13,16 +13,20 @@ public class MemberDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Integer mileagePoint;
 
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = false)
     private Integer complaint;
 
     @Column
     private String image;
+
+    @Column(nullable = false)
+    private Integer totalScore;
 
     @OneToOne
     @JoinColumn(name = "member_id")
@@ -32,6 +36,7 @@ public class MemberDetail {
         this.nickname = nickname;
         this.mileagePoint = 0;
         this.complaint = 0;
+        this.totalScore = 0;
     }
     public void setMember(Member member) {
         this.member = member;

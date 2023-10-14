@@ -24,7 +24,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 이 클래스는 Spring Security의 기본 설정을 하는 클래스
+ * Spring Security의 기본 설정을 하는 클래스
  * 특히 JWT 인증에 필요한 필터 설정 및 URL에 따른 접근 권한 설정 .
  */
 
@@ -86,21 +86,22 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         );
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
-                authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .antMatchers("/").permitAll()
-                        .antMatchers("/api/member/**").permitAll()
-                        .antMatchers("/v3/api-docs/**").permitAll()
-                        .antMatchers("/swagger-ui/**").permitAll()
-                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+
+                        authorizeHttpRequests
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                .antMatchers("/").permitAll()
+                                .antMatchers("/api/member/**").permitAll()
+                                .antMatchers("/v3/api-docs/**").permitAll()
+                                .antMatchers("/swagger-ui/**").permitAll()
+                                .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
         http.cors();
 
-//        http.formLogin((formLogin) ->
-//                formLogin
-//                        .loginPage("/api/member/login").permitAll()
-//        );
+        http.formLogin((formLogin) ->
+                formLogin
+                        .loginPage("/api/member/login").permitAll()
+        );
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);

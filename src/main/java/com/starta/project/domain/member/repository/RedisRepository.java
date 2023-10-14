@@ -41,7 +41,6 @@ public class RedisRepository {
      * @param key 대상 key
      * @param time 만료 기간 (초단위)
      */
-
     public void setExpire(String key, Long time) {
         redisTemplate.expire(key, time, TimeUnit.SECONDS);
     }
@@ -49,5 +48,4 @@ public class RedisRepository {
     public Long getTimeToLive(String key) {
         return redisTemplate.getExpire(key);
     }
-
 }
