@@ -15,7 +15,7 @@ public class MemberAnswer {
     private Long id;
 
     @Column(nullable = false)
-    private boolean isCorrect;
+    private boolean isCorrect = false;
 
     @ManyToOne
     @JoinColumn(name = "quizChoices_id", nullable = false)
@@ -28,6 +28,16 @@ public class MemberAnswer {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public void set() {
+        this.isCorrect = true;
+    }
+
+    public void answer(Member member, QuizChoices quizChoices, QuizQuestion quizQuestion) {
+        this.member = member;
+        this.quizChoices = quizChoices;
+        this.quizQuestion = quizQuestion;
+    }
     // getters, setters, etc.
 }
 

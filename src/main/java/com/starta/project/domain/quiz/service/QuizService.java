@@ -54,13 +54,16 @@ public class QuizService {
         //퀴즈 반환
         CreateQuizResponseDto quizResponseDto = new CreateQuizResponseDto();
         quizResponseDto.set(quiz.getId());
-        MsgDataResponse msgDataResponse = new MsgDataResponse("퀴즈 생성 성공!" , quizRequestDto);
+        MsgDataResponse msgDataResponse = new MsgDataResponse("퀴즈 생성 성공!" , quizResponseDto);
         return ResponseEntity.ok().body(msgDataResponse);
     }
 
-    public ResponseEntity<ShowQuizResponseDto> showQuiz(Long id) {
+    public ResponseEntity<ShowQuizResponseDto> showQuiz(Long id, Member member) {
         ShowQuizResponseDto showQuizResponseDto = new ShowQuizResponseDto();
         Quiz quiz = findQuiz(id);
+        if(quiz.getDisplay()== false && !quiz.getMember().getId().equals(member.getId()))  {
+            throw new IllegalArgumentException("게시된 퀴즈가 아닙니다. ");
+        }
         //댓글 가져오기
         List<Comment> comments = getComment(quiz.getId());
         //조회수 => api 검색 = 조회하는 횟수 -> 이거 조회 api 안해도 될꺼 같은데..?
@@ -133,6 +136,17 @@ public class QuizService {
         return new MsgResponse("좋아요를 눌렀습니다. ");
     }
 
+    public ResponseEntity<MsgResponse> display(Long id, Long memberId) {
+        Quiz quiz = findQuiz(id);
+        if(!quiz.getMember().getId().equals(memberId)) {
+            return ResponseEntity.badRequest().body(new MsgResponse("작성자만 게시 가능합니다. "));
+        }
+        quiz.play(true);
+        quizRepository.save(quiz);
+        return ResponseEntity.ok(new MsgResponse("퀴즈를 게시합니다. "));
+    }
+
+
 
     private Quiz findQuiz (Long id) {
        return quizRepository.findById(id).orElseThrow(() ->
@@ -143,7 +157,6 @@ public class QuizService {
         List<Comment> commentList = commentRepository.findAllByQuizId(id);
         return commentList;
     }
-
 
 
     //수정이기 때문에 주석 처리
