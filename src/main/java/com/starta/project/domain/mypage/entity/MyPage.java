@@ -1,4 +1,4 @@
 package com.starta.project.domain.mypage.entity;
 
-public class Mypage {
+public class MyPage {
 }

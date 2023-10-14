@@ -1,34 +1,39 @@
-#cloud:
-#  aws:
-#    credentials:
-#      accessKey: ${S3_AccessKey}
-#      secretKey: ${S3_SecretKey}
-#    s3:
-#      bucket:
-#    region:
-#      static:
-#    stack:
-#      auto: false
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_Name}
+    credentials:
+      access-key: ${S3_AccessKey}
+      secret-key: ${S3_SecretKey}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 spring:
   datasource:
-    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
+    url: ${DB_URL}
     password: ${DB_PASSWORD}
   jpa:
-    hibernate:
-      ddl-auto: update
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
-  cache:
+        format_sql: 'true'
+        use_sql_comments: 'true'
+        show_sql: 'true'
+    hibernate:
+      ddl-auto: update
+  data:
     redis:
-      port: '6379'
-      host: localhost
-    type: redis
-
+      port: ${REDIS_PORT}
+      host: ${REDIS_URL}
+      password: ${REIDS_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 jwt:
   secret:
     key: ${JWT_SecretKey}

@@ -1,0 +1,52 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: heypoppop/final
+          stage: main
+          yaml: |
+            name: backend
+            app: java@17
+            options:
+              ports: 8080
+              env:
+                - name: DB_URL
+                  secret: DB_URL
+                - name: DB_PASSWORD
+                  secret: DB_PASSWORD
+                - name: JWT_SecretKey
+                  secret: JWT_SecretKey
+                - name: S3_AccessKey
+                  secret: S3_AccessKey
+                - name: S3_SecretKey
+                  secret: S3_SecretKey
+                - name: REDIS_URL
+                  secret: REDIS_URL
+                - name: REDIS_PORT
+                  secret: REDIS_PORT
+                - name: REIDS_PASSWORD
+                  secret: REDIS_PASSWORD
+                - name: S3_Name
+                  secret: S3_Name
+                - name: SPRING_PROFILES_ACTIVE
+                  value: ""
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}

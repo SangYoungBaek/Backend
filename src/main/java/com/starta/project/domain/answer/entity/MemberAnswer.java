@@ -1,8 +1,6 @@
 package com.starta.project.domain.answer.entity;
 
-import com.starta.project.domain.member.entity.Member;
-import com.starta.project.domain.quiz.entity.QuizChoices;
-import com.starta.project.domain.quiz.entity.QuizQuestion;
+import com.starta.project.domain.member.entity.MemberDetail;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -14,20 +12,34 @@ public class MemberAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long quizId;
+
     @Column(nullable = false)
-    private boolean isCorrect;
+    private boolean correct = false;
+
+    @Column
+    private Integer quizQuestionNum;
+
+    @Column
+    private Long memberId;
 
     @ManyToOne
-    @JoinColumn(name = "quizChoices_id", nullable = false)
-    private QuizChoices quizChoices;
+    @JoinColumn(name = "member_detail_id")
+    private MemberDetail memberDetail;
 
-    @ManyToOne
-    @JoinColumn(name = "quizQuestion_id", nullable = false)
-    private QuizQuestion quizQuestion;
+    public void set(boolean b) {
+        this.correct = b;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    public void answer(Long quizId, Long id, Integer questionNum) {
+        this.quizId = quizId;
+        this.memberId = id;
+        this.quizQuestionNum = questionNum;
+    }
+
+    public void got(MemberDetail memberDetail) {
+        this.memberDetail = memberDetail;
+    }
     // getters, setters, etc.
 }
 
