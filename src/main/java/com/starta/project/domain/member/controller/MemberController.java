@@ -24,9 +24,17 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService userService;
-    @Operation(summary = "회원가입")
+
     @PostMapping("/signup")
-    public ResponseEntity<MsgResponse> signup(@RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<MsgResponse> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
+        // Validation 예외처리
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        if (!fieldErrors.isEmpty()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(new MsgResponse("회원가입 실패"));
+        }
         return ResponseEntity.ok(userService.signup(requestDto));
     }
 }
