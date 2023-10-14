@@ -24,8 +24,8 @@ public class RefreshTokenService {
     private final RedisRepository redisRepository;
 
     public static final String REFRESH_PREFIX = "refresh:";
-//    private final long TOKEN_TIME = 14 * 24 * 60 * 60L;  // 서버용 2주, 세컨드
-    private final long TOKEN_TIME = 5 * 60L;  // TEST용 5분, 세컨드
+    private final long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60L;  // 서버용 2주, 세컨드단위
+//    private final long REFRESH_TOKEN_TIME = 5 * 60L;  // TEST용 5분, 세컨드단위
     /**
      * refresh 토큰 저장 및 ID 반환 메소드
      * @param userName 발급할 userName
@@ -42,9 +42,7 @@ public class RefreshTokenService {
         try {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
-
-            redisRepository.setExpire(key, 14 * 24 * 60 * 60L);   //서버용 14일
-//            redisRepository.setExpire(key, TOKEN_TIME);   // Test용 5분
+            redisRepository.setExpire(key, REFRESH_TOKEN_TIME);
             return uuid.toString();
 
         } catch (JsonProcessingException e) {

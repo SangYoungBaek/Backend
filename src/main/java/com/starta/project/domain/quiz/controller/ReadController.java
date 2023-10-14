@@ -5,7 +5,6 @@ import com.starta.project.domain.quiz.dto.SimpleQuizDto;
 import com.starta.project.domain.quiz.service.ReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +31,13 @@ public class ReadController {
         return ResponseEntity.ok(readService.readQuizByHot());
     }
 
-
     @GetMapping("/quiz/viewNum")
     public ResponseEntity<List<SimpleQuizDto>> readByView () {
         return ResponseEntity.ok(readService.readByView());
+    }
+
+    @GetMapping("/quiz/search")
+    public ResponseEntity<List<SimpleQuizDto>> search(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(readService.search(keyword));
     }
 }
