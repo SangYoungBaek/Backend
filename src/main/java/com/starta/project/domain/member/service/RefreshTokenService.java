@@ -24,17 +24,18 @@ public class RefreshTokenService {
     private final RedisRepository redisRepository;
 
     public static final String REFRESH_PREFIX = "refresh:";
-
+    private final long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60L;  // 서버용 2주, 세컨드단위
+//    private final long REFRESH_TOKEN_TIME = 5 * 60L;  // TEST용 5분, 세컨드단위
     /**
      * refresh 토큰 저장 및 ID 반환 메소드
-     * @param accessToken 발급된 엑세스토큰
      * @param userName 발급할 userName
      * @param role 발급할 userRole
      * @return refreshtoken key 값
      */
-    public String createRefreshToken(String accessToken, String userName, UserRoleEnum role) {
+    public String createRefreshToken(String userName, UserRoleEnum role) {
 
-        String key = REFRESH_PREFIX + accessToken.replace("Bearer ", "");
+        UUID uuid = UUID.randomUUID();
+        String key = REFRESH_PREFIX + uuid;
 
         RefreshToken refreshToken = new RefreshToken(userName, role);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -42,9 +43,8 @@ public class RefreshTokenService {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
 
-            redisRepository.setExpire(key, 24 * 60 * 60L);   //서버용 1일
-//            redisRepository.setExpire(key, 5 * 60L);   // Test용 5분
-            return key;
+            redisRepository.setExpire(key, REFRESH_TOKEN_TIME);  
+            return uuid.toString();
 
         } catch (JsonProcessingException e) {
             log.error("refresh 토큰 String 변환 실패");
@@ -57,9 +57,10 @@ public class RefreshTokenService {
     }
 
     // 만료 전 재발행
-    public String refreshTokenRotation(String accessToken, String userName, UserRoleEnum role, Long time) {
+    public String refreshTokenRotation(String userName, UserRoleEnum role, Long time) {
 
-        String key = REFRESH_PREFIX + accessToken.replace("Bearer ", "");
+        UUID uuid = UUID.randomUUID();
+        String key = REFRESH_PREFIX + uuid;
 
         RefreshToken refreshToken = new RefreshToken(userName, role);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -67,7 +68,7 @@ public class RefreshTokenService {
             String value = objectMapper.writeValueAsString(refreshToken);
             redisRepository.save(key, value);
             redisRepository.setExpire(key, time);
-            return key;
+            return uuid.toString();
 
         } catch (JsonProcessingException e) {
             log.error("refresh 토큰 String 변환 실패");
