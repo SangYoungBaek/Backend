@@ -27,9 +27,6 @@ public class MemberService {
         String nickname = requestDto.getNickname();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
-        if(!Objects.equals(requestDto.getCheckpassword(), requestDto.getPassword())){
-            throw new IllegalArgumentException("패스워드와 패스워드 확인이 다릅니다.");
-        }
         // username 중복 확인
         Optional<Member> checkUsername = memberRepository.findByUsername(username);
         if(checkUsername.isPresent()){

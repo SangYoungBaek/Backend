@@ -31,7 +31,7 @@ public class RedisRepository {
      * @param key 조회하려는 key 값
      * @return key에 해당하는 value값
      */
-    public String  getValue(String key) {
+    public String getValue(String key) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
     }
