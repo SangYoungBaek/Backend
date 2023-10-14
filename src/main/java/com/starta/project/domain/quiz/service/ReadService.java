@@ -3,6 +3,8 @@ package com.starta.project.domain.quiz.service;
 import com.starta.project.domain.quiz.dto.CategoryDto;
 import com.starta.project.domain.quiz.dto.SimpleQuizDto;
 import com.starta.project.domain.quiz.entity.Quiz;
+import com.starta.project.domain.quiz.entity.QuizQuestion;
+import com.starta.project.domain.quiz.repository.QuizQuestionRepository;
 import com.starta.project.domain.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import java.util.Random;
 public class ReadService {
 
     private final QuizRepository quizRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
 
     // 카테고리 별 정렬
     @Transactional(readOnly = true)
@@ -64,6 +67,13 @@ public class ReadService {
         return list;
     }
 
+    public List<QuizQuestion> showQuestionList(Long id) {
+        Quiz quiz = quizRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("해당 퀴즈는 없는 퀴즈입니다. "));
+        List<QuizQuestion> quizQuestion = quizQuestionRepository.findAllByQuiz(quiz);
+       return quizQuestion;
+    }
+
     //리스트 만들기
     private List<SimpleQuizDto> makeList (List<Quiz> quizList , List<SimpleQuizDto> list) {
         for (Quiz quiz : quizList) {
@@ -73,4 +83,6 @@ public class ReadService {
         }
         return list;
     }
+
+
 }

@@ -2,6 +2,7 @@ package com.starta.project.domain.quiz.controller;
 
 import com.starta.project.domain.quiz.dto.CategoryDto;
 import com.starta.project.domain.quiz.dto.SimpleQuizDto;
+import com.starta.project.domain.quiz.entity.QuizQuestion;
 import com.starta.project.domain.quiz.service.ReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,10 @@ public class ReadController {
     @GetMapping("/quiz/search")
     public ResponseEntity<List<SimpleQuizDto>> search(@RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(readService.search(keyword));
+    }
+
+    @GetMapping("/quiz/quizQuestion/{id}")
+    public ResponseEntity<List<QuizQuestion>> showQuizQuestionList(@PathVariable Long id) {
+        return ResponseEntity.ok(readService.showQuestionList(id));
     }
 }

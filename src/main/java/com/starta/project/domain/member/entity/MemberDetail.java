@@ -1,9 +1,14 @@
 package com.starta.project.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starta.project.domain.answer.entity.MemberAnswer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +37,10 @@ public class MemberDetail {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER ,mappedBy = "memberDetail",cascade = CascadeType.ALL)
+    private List<MemberAnswer> memberAnswer = new ArrayList<>();
+
     public MemberDetail(String nickname) {
         this.nickname = nickname;
         this.mileagePoint = 0;
@@ -44,6 +53,11 @@ public class MemberDetail {
 
     public void changeMileagePoint(Integer totalPrice) {
         this.mileagePoint -= totalPrice;
+    }
+
+    public void answer(MemberAnswer memberAnswer) {
+        this.memberAnswer.add(memberAnswer);
+        memberAnswer.got(this);
     }
 }
 
