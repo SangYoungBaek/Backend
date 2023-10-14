@@ -11,5 +11,5 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     List<Quiz> findAllByDisplayIsTrue(Sort id);
 
-    List<Quiz> findAllByDisplayIsTrueAndTitleContaining(String keyword);
+    List<Quiz> findAllByDisplayIsTrueAndTitleContainingOrderById(String keyword);
 }

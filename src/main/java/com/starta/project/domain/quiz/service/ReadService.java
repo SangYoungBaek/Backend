@@ -59,7 +59,7 @@ public class ReadService {
     @Transactional(readOnly = true)
     public List<SimpleQuizDto> search(String keyword) {
         List<SimpleQuizDto> list = new ArrayList<>();
-        List<Quiz> quizList = quizRepository.findAllByDisplayIsTrueAndTitleContaining(keyword);
+        List<Quiz> quizList = quizRepository.findAllByDisplayIsTrueAndTitleContainingOrderById(keyword);
         list = makeList(quizList,list);
         return list;
     }
