@@ -5,5 +5,7 @@ FROM openjdk:17-jdk-slim
 ARG JAR_FILE=*.jar
 ### 파일 복사
 COPY ${JAR_FILE} app.jar
+### 실행환경설정
+ENV TZ=Asia/Seoul
 ### 실행할 명령 지정한다.
 ENTRYPOINT ["java","-jar","/app.jar"]
