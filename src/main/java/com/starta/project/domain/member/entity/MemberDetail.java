@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starta.project.domain.answer.entity.MemberAnswer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class MemberDetail {
     @Column(nullable = false)
     private Integer totalScore;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -47,6 +46,15 @@ public class MemberDetail {
         this.complaint = 0;
         this.totalScore = 0;
     }
+
+    public MemberDetail(String nickname, String kakaoProfilImg) {
+        this.nickname = nickname;
+        this.image = kakaoProfilImg;
+        this.mileagePoint = 0;
+        this.complaint = 0;
+        this.totalScore = 0;
+    }
+
     public void setMember(Member member) {
         this.member = member;
     }
@@ -58,6 +66,27 @@ public class MemberDetail {
     public void answer(MemberAnswer memberAnswer) {
         this.memberAnswer.add(memberAnswer);
         memberAnswer.got(this);
+    }
+
+    public void gainMileagePoint(Integer i) {
+        this.mileagePoint += i;
+    }
+
+    public void gainScore(Integer i) {
+        this.totalScore += i;
+    }
+
+    public void changeAnswer(MemberAnswer memberAnswer) {
+        for (MemberAnswer answer : this.memberAnswer) {
+            if (memberAnswer.getId().equals(answer.getId())) {
+                if (answer.isCorrect() == true) break;
+                answer.modify(memberAnswer.isCorrect());
+                break;
+            }
+        }
+    }
+    public void updateNickname(String newNickname)  {
+        this.nickname = newNickname;
     }
 }
 

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,14 +40,18 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
-
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:3000", "http://localhost:8080")
-                .allowedOrigins("http://localhost:3000", "http://localhost:8080", "https://www.yulmoo.world", "https://yulmoo.world")
+                .allowedOrigins("http://localhost:3000",
+                                "http://localhost:8080",
+                                "https://www.yulmoo.world",
+                                "https://yulmoo.world",
+                                "https://api.quizpop.net",
+                                "https://www.quizpop.net",
+                                "https://quizpop.net")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowedHeaders("*")
-                .exposedHeaders(JwtUtil.AUTHORIZATION_HEADER) // JWT 헤더를 노출
+                .exposedHeaders(JwtUtil.AUTHORIZATION_HEADER, JwtUtil.REFRESH_HEADER) // JWT 헤더를 노출
                 .allowCredentials(true);
     }
 
@@ -72,8 +77,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
@@ -85,22 +88,19 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         );
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
-
                         authorizeHttpRequests
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .antMatchers("/").permitAll()
                                 .antMatchers("/api/member/**").permitAll()
                                 .antMatchers("/v3/api-docs/**").permitAll()
                                 .antMatchers("/swagger-ui/**").permitAll()
+                                .antMatchers("/api/quiz/**").permitAll()
                                 .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
         http.cors();
 
-        http.formLogin((formLogin) ->
-                formLogin
-                        .loginPage("/api/member/login").permitAll()
-        );
+        http.formLogin(AbstractHttpConfigurer::disable); // 폼 로그인 비활성화
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);

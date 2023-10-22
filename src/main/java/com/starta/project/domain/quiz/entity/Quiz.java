@@ -1,9 +1,5 @@
 package com.starta.project.domain.quiz.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.starta.project.domain.member.entity.Member;
 import com.starta.project.domain.quiz.dto.CreateQuizRequestDto;
 import lombok.Getter;
 
@@ -38,23 +34,26 @@ public class Quiz {
     @Column
     private String image;
 
-    @Column(nullable = false)
-    private String category;
+    @Enumerated(value = EnumType.STRING)
+    private QuizCategoryEnum category;
 
     @Column
     private Boolean display = false;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column
+    private Long memberId;
 
-    public void set(CreateQuizRequestDto quizRequestDto, LocalDateTime now, Member member) {
+    @Column
+    private String nickname;
+
+    public void set(CreateQuizRequestDto quizRequestDto, String image, LocalDateTime now, Long memberId, String nickname) {
         this.title = quizRequestDto.getTitle();
         this.category = quizRequestDto.getCategory();
-        this.image = quizRequestDto.getImage();
-        this.member = member;
+        this.image = image;
         this.createdAt = now;
         this.content = quizRequestDto.getContent();
+        this.memberId = memberId;
+        this.nickname = nickname;
     }
 
     public void view(Integer viewCount) {

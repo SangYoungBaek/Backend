@@ -34,31 +34,29 @@ public class QuizQuestionService {
 
     //퀴즈 생성
     @Transactional
-    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, MultipartFile multipartFile,
+    public ResponseEntity<MsgResponse> createQuizQuestion(Long id, Optional<MultipartFile> multipartFile,
                                                           CreateQuestionRequestDto createQuestionRequestDto,
                                                           Member member) {
         //퀴즈 찾기
         Quiz quiz = findQuiz(id);
         //퀴즈 생성자 확인
-        if (!member.getId().equals(quiz.getMember().getId())) {
+        if (!member.getId().equals(quiz.getMemberId())) {
             MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
             return ResponseEntity.badRequest().body(msgResponse);
         }
-
         //이미지 추가
-        String image;
+        String image = "";
         //이미지
-        try {
-            if (multipartFile.isEmpty()) image = "";
-            else image = amazonS3Service.upload(multipartFile);
-        } catch (java.io.IOException e) {
-            throw new IOException("이미지 업로드에 문제가 있습니다!  ");
+        if(multipartFile.isPresent()){
+            try {
+                 image = amazonS3Service.upload(multipartFile.get());
+            } catch (java.io.IOException e) {
+                throw new IOException("이미지 업로드에 문제가 있습니다!  ");
+            }
         }
-        createQuestionRequestDto.set(image);
-
         //문제 번호 찾기
         Integer questionNum = 0;
-        //findTop == 가장 먼저 찾을 수 있는 항목
+        //findTop == 가장 먼저 찾을 수 있는 항목(살짝 다르긴 하지만 가장 큰 값이라는 것은 있다.)
         Optional<QuizQuestion> question =  quizQuestionRepository.findTopByQuizOrderByQuestionNumDesc(quiz);
         if (question.isPresent()){
             questionNum = question.get().getQuestionNum();
@@ -67,7 +65,7 @@ public class QuizQuestionService {
         QuizQuestion quizQuestion = new QuizQuestion();
         questionNum++;
         quizQuestion.set(quiz,questionNum , createQuestionRequestDto.getTitle(), createQuestionRequestDto.getContent(),
-                createQuestionRequestDto.getImage());
+                image);
         quizQuestionRepository.save(quizQuestion);
         //선택지 만들기 [] 형식
         List<CreateQuizChoicesDto> quizChoicesList = createQuestionRequestDto.getQuizChoices();
@@ -81,6 +79,7 @@ public class QuizQuestionService {
         return ResponseEntity.ok(new MsgResponse("문제 생성을 성공 하셨습니다!"));
     }
 
+    //문항 한 문제씩 보기
     public ShowQuestionResponseDto showQuizQuestion(Long id, Integer questionNum) {
         // 퀴즈 찾기
         Quiz quiz = findQuiz(id);
@@ -96,12 +95,13 @@ public class QuizQuestionService {
 
     // cascade를 사용하는 방식도 있지만 이용하기 위해서는 DB에 추가적 연관관계를 설정해야함
     // cascade와 같은 경우 강력한 기능이지만 생각 못한 상황에서 삭제될 가능성이 있기 때문에 그냥 단순 조회를 통해 찾아서 지움
+    //퀴즈 삭제
     @Transactional
     public ResponseEntity<MsgResponse> deleteQuizQuestion(Long id, Integer questionNum, Member member) {
         // 퀴즈 찾기
         Quiz quiz = findQuiz(id);
 
-        if (!member.getId().equals(quiz.getMember().getId())) {
+        if (!member.getId().equals(quiz.getMemberId())) {
             MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
             return ResponseEntity.badRequest().body(msgResponse);
         }
@@ -128,7 +128,7 @@ public class QuizQuestionService {
 
         QuizChoices quizChoices = quizChoicesRepository.findById(id).orElseThrow( ()
          -> new NullPointerException("해당 선택지는 없는 선택지입니다. "));
-        if (!member.getId().equals(quizChoices.getQuizQuestion().getQuiz().getMember().getId())) {
+        if (!member.getId().equals(quizChoices.getQuizQuestion().getQuiz().getMemberId())) {
             MsgResponse msgResponse = new MsgResponse("퀴즈 생성자가 아닙니다. ");
             return ResponseEntity.badRequest().body(msgResponse);
         }
@@ -137,24 +137,22 @@ public class QuizQuestionService {
         return ResponseEntity.ok(new MsgResponse("삭제 성공!"));
     }
 
+    //퀴즈 찾기
     private Quiz findQuiz(Long id) {
         return quizRepository.findById(id).orElseThrow( ()
         -> new NullPointerException("해당 퀴즈는 없는 퀴즈입니다. "));
     }
 
+    //퀴즈의 문제 번호수를  찾아서 보여줌
     private QuizQuestion findQuizQuestion (Quiz quiz,Integer questionNum) {
         return quizQuestionRepository.findByQuizAndQuestionNum(quiz, questionNum);
     }
-
-
-
 
     // 수정이라 주석 처리
 //    public MsgResponse updateQuizQuestion(Long id, UpdateQuizQuestionDto updateQuizQuestionDto) {
 //        QuizQuestion quizQuestion = quizQuestionRepository.findById(id).orElseThrow(()
 //                -> new NullPointerException("해당 퀴즈는 없는 퀴즈 입니다. ")
 //        );
-//
 //        quizQuestion.update(updateQuizQuestionDto);
 //        quizQuestionRepository.save(quizQuestion);
 //        MsgResponse msgResponse = new MsgResponse("문제 수정 성공! ");

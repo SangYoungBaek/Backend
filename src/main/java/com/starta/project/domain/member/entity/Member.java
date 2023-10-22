@@ -1,5 +1,6 @@
 package com.starta.project.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +27,9 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @Column
+    private Long kakaoId;
+
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MemberDetail memberDetail;
 
@@ -34,6 +38,18 @@ public class Member {
         this.password = password;
         this.block = false;
         this.role = role;
+    }
+
+    public Member(String username, String password, UserRoleEnum role, Long kakaoId) {
+        this.username = username;
+        this.password = password;
+        this.block = false;
+        this.role = role;
+        this.kakaoId =kakaoId;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
 

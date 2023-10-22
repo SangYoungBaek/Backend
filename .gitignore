@@ -203,4 +203,5 @@ out/
 .github/*
 docker/*
 scripts/*
+logs/*
 appspec.yml
