@@ -22,7 +22,7 @@ spring:
       hibernate:
         format_sql: 'true'
         use_sql_comments: 'true'
-        show_sql: 'true'
+        show_sql: 'false'
     hibernate:
       ddl-auto: update
   data:
@@ -37,3 +37,8 @@ spring:
 jwt:
   secret:
     key: ${JWT_SecretKey}
+
+# 스웨거 비활성화
+springdoc:
+  swagger-ui:
+    enabled: false
