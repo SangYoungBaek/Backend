@@ -48,3 +48,7 @@ kakao:
 springdoc:
   swagger-ui:
     enabled: false
+#
+sentry:
+  dsn: ${SENTRY_DSN}
+  sentry.traces-sample-rate: 1.0

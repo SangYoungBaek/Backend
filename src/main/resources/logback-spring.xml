@@ -13,12 +13,22 @@
         </encoder>
     </appender>
 
-    <root level="WARN">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="ROLLING_FILE" />
-    </root>
+    <springProperty scope="context" name="sentryDsn" source="sentry.dsn" defaultValue=""/>
+    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
+        <options>
+            <!-- NOTE: Replace the test DSN below with YOUR OWN DSN to see the events from this app in your Sentry project/dashboard -->
+            <dsn>${sentryDsn}</dsn>
+        </options>
+        <!-- Optionally change minimum Event level. Default for Events is ERROR -->
+        <minimumEventLevel>WARN</minimumEventLevel>
+    </appender>
 
     <root level="WARN">
+        <appender-ref ref="ROLLING_FILE" />
+        <appender-ref ref="Sentry" />
+    </root>
+
+    <root level="INFO">
         <appender-ref ref="CONSOLE" />
     </root>
 </configuration>

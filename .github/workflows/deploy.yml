@@ -50,6 +50,7 @@ jobs:
           jwt.secret.key: ${{ secrets.JWT_KEY }}
           kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
           kakao.redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
+          sentry.dsn: ${{ secrets.SENTRY_DSN }}
 
       - name: Gradle 권한 부여
         run: chmod +x gradlew
