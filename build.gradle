@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.16'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-//	id "io.sentry.jvm.gradle" version "3.14.0"
 }
 
 group = 'com.starta'
@@ -60,14 +59,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-//
-//sentry {
-//	// Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-//	// This enables source context, allowing you to see your source
-//	// code as part of your stack traces in Sentry.
-//	includeSourceContext = true
-//
-//	org = "quizpop"
-//	projectName = "quizpop"
-//	authToken = System.getenv("SENTRY_AUTH_TOKEN")
-//}
+
