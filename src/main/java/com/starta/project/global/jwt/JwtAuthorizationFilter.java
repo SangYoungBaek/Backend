@@ -31,6 +31,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
+    private void setErrorResponse(HttpServletResponse res, int statusCode, String msg) throws IOException {
+        res.setContentType("application/json");
+        res.setCharacterEncoding("utf-8");
+        res.setStatus(statusCode);
+        res.getWriter().write("{\"msg\":\"" + msg + "\"}");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
         log.info("JWT 필터 시작");
@@ -43,12 +50,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             try {
                 jwtUtil.checkUsingRefreshToken(accessTokenValue, refreshTokenValue, res);
                 return;
-            } catch (JwtException jwtEx) {
-                log.error("Refresh token expired or invalid.", jwtEx);
-                res.setContentType("application/json");
-                res.setCharacterEncoding("utf-8");
-                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                res.getWriter().write("{\"message\":\"Expired Refresh Token. 토큰이 만료되었습니다.\"}");
+            }  catch (CustomInvalidJwtException e) {
+                setErrorResponse(res, HttpServletResponse.SC_BAD_REQUEST, "Expired Refresh Token. 유효하지 않은 JWT 토큰 입니다.");
+            }catch (JwtException jwtEx) {
+                setErrorResponse(res, HttpServletResponse.SC_UNAUTHORIZED, "Expired Refresh Token. 토큰이 만료되었습니다");
                 return;
             }
         }
