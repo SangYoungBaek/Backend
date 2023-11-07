@@ -52,5 +52,10 @@ public class Comment {
     public void update(String content) {
         this.comment = content;
     }
+
+    public void complain() {
+        this.complainInt += 1; // 신고 횟수 증가
+    }
+
 }
 

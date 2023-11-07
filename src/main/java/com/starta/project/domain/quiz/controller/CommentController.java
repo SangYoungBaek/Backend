@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
-    private static final RateLimiter rateLimiter = RateLimiter.create(0.5);
+    private static final RateLimiter rateLimiter = RateLimiter.create(0.2);
 
 
     @Operation(summary = "댓글 조회 ")
