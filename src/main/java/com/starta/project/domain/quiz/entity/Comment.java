@@ -19,6 +19,7 @@ public class Comment {
     @Column(nullable = false)
     private String comment;
 
+    @Getter
     @Column
     private Integer complainInt = 0;
 
