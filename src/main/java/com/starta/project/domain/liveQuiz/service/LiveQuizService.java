@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class LiveQuizService {
 
 
-    public ChatMessageDto sendMessage(Member member, ChatMessageDto chatMessage) {
+    public ChatMessageDto sendMessage(ChatMessageDto chatMessage) {
         if (chatMessage != null && chatMessage.getMessage() != null) {
             String escapedMessage = HtmlUtils.htmlEscape(chatMessage.getMessage());
-            chatMessage = new ChatMessageDto(member.getId(), member.getUsername(), escapedMessage, LocalDateTime.now());
+            chatMessage = new ChatMessageDto(1L, "민지귀요미", escapedMessage, LocalDateTime.now());
         }
         return chatMessage;
     }
