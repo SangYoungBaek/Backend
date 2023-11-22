@@ -143,29 +143,54 @@
 
 ###  🍿 [BE] Project Members 
 
-
 <table>
    <tr>
+    <td align="center"><b><a href="https://github.com/zidoopal">👑 지유진</a></b></td>
+    <td align="center"><b><a href="https://github.com/wynter24">🍕 김민경</a></b></td>
     <td align="center"><b><a href="https://github.com/jihyeon4956">👑 노지현</a></b></td>
     <td align="center"><b><a href="https://github.com/SangYoungBaek">🍰 백상용</a></b></td>
     <td align="center"><b><a href="https://github.com/sarakyang">🥯 양승민</a></b></td>
     <td align="center"><b><a href="https://github.com/heypoppop">🍔 진민지</a></b></td>
   </tr>
   <tr>
+    <td align="center"><a href="https://github.com/zidoopal"><img src="https://avatars.githubusercontent.com/u/131226548?v=4" width="100px" /></a></td>
+    <td align="center"><a href="https://github.com/wynter24"><img src="https://avatars.githubusercontent.com/u/97824352?v=4" width="100px" /></a></td>
     <td align="center"><a href="https://github.com/jihyeon4956"><img src="https://avatars.githubusercontent.com/u/132557632?v=4" width="100px" /></a></td>
     <td align="center"><a href="https://github.com/SangYoungBaek"><img src="https://avatars.githubusercontent.com/u/47877063?v=4" width="100px" /></a></td>
     <td align="center"><a href="https://github.com/sarakyang"><img src="https://avatars.githubusercontent.com/u/139844539?v=4" width="100px" /></a></td>
     <td align="center"><a href="https://github.com/heypoppop"><img src="https://avatars.githubusercontent.com/u/140745309?v=4" width="100px" /></a></td>
   </tr>
   <tr>
+    <td align="center"><b>🌱 React</b></td>
+    <td align="center"><b>🌱 React</b></td>
     <td align="center"><b>🌱 Spring</b></td>
     <td align="center"><b>🌱 Spring</b></td>
     <td align="center"><b>🌱 Spring</b></td>
     <td align="center"><b>🌱 Spring</b></td>
   </tr>
 </table>
+<br>
+<br>
+
+
+| 역할  | 이름  | 분담  |
+| --- | ---    | --- |
+| FE ✨​ | 지유진(VL) | ‣ 메인 페이지 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 신규 / 인기 / 조회순 퀴즈 조회 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 카테고리 별 퀴즈 조회<br> ‣ 퀴즈 관련 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 제작 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 상세 정보 페이지 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 문항 제작 페이지 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 풀이 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 상세 조회 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 댓글 / 좋아요 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 결과 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 링크 복사 / 카카오 공유기능 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 라이브 퀴즈 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 그림판 기능 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 웹소켓 기반 실시간 채팅 |
+| FE  | 김민경 | ‣ 헤더 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 로그인 (JWT: Access/Refresh) <br>&nbsp;&nbsp;&nbsp;&nbsp;- 카카오 소셜로그인 / 회원가입 <br>&nbsp;&nbsp;&nbsp;&nbsp;- Sse 기반 실시간 알림 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-전체 읽음 및 삭제 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 검색 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 출석체크 <br>‣ 마이페이지 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 프로필, 닉네임, 비밀번호 변경 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 회원 탈퇴 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 마일리지 내역 조회 <br> ‣ 마일리지샵 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 상품 조회 및 구매 |
+| BE✨​ | 노지현(L) | ‣ spring Security 적용 <br>‣ 유저관련 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 회원가입 기능 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 로그인 기능 (JWT: Access/Refresh) <br>&nbsp;&nbsp;&nbsp;&nbsp;- OAuth 2.0 카카오 소셜로그인 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 유저 신고 및 권한차단 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 유저 테스트코드 작성 <br>‣ Redis <br>‣ 마이페이지 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 유저정보 변경(프로필, 닉네임, 비밀번호) <br>&nbsp;&nbsp;&nbsp;&nbsp;- 회원탈퇴 |
+| BE  | 백상용 | ‣ Server-Sent Events <br>&nbsp;&nbsp;&nbsp;&nbsp;- 실시간 알림 기능 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 댓글, 좋아요 알림 기능 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 알림 전체 읽음 및 삭제 기능 |
+| BE  | 양승민 | ‣ 전반적 퀴즈 서비스 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 CRUD <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 풀이 응답 저장 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 풀이 결과 보기 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 비회원 기능 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 생성 시 마일리지 획득 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 퀴즈 풀이 시 마일리시 획득 |
+| BE  | 진민지 | ‣ 라이브퀴즈 웹소켓기반 기능 구현 <br>‣ 마일리지샵 CRUD <br>‣ CICD 무중단 배포 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 테스트서버(CloudType) <br>&nbsp;&nbsp;&nbsp;&nbsp;- 메인서버 무중단 배포(AWS EC2, Nginx, Docker 외) <br>‣ log 관리 (logback, Sentry) <br>‣ DB 관리 (백업, 복원) <br>‣ Swagger |
+| Design | 문지우 | ‣ 디자인 총괄 반응형 구도작업 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 헤더 디자인 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 파비콘 & 로고 디자인 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 배너 & 캐릭터 디자인 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 전체페이지 반응형 디자인 <br>&nbsp;&nbsp;&nbsp;&nbsp;- 영상용 커버 및 자막배경 디자인 |
+
+
+## 🛠 아키텍쳐
+
+<img src="https://teamsparta.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F1d4777eb-a529-4e9b-8679-a56ece171ca9%2FKakaoTalk_20231110_134551769.png?table=block&id=d5d62675-15dc-4169-9079-e98f089a82a8&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=&cache=v2" >
+
 
 <br>
+
 <br>
 
 ## 🛠 Tools
@@ -190,8 +215,8 @@
 <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=AmazonS3&logoColor=white">
 <img src="https://img.shields.io/badge/code deploy-4B612C?style=for-the-badge&logo=codedeploy&logoColor=white">
 <img src="https://img.shields.io/badge/Github Actions-2088FF?style=for-the-badge&logo=Github Actions&logoColor=white">
-
-
+<img src="https://img.shields.io/badge/SSE-61DAFB?style=for-the-badge&logo=SSE&logoColor=white">
+<img src="https://img.shields.io/badge/websocket-61DAFB?style=for-the-badge&logo=websocket&logoColor=white">
 
 </p>
 
@@ -199,7 +224,9 @@
 
 <br>
 
+
 #### Dev tools
+
 
 <p> 
   <img src="https://img.shields.io/badge/intellij idea-000000.svg?style=for-the-badge&logo=intellij idea&logoColor=white">
